@@ -26,17 +26,27 @@ export default {
         },
     },
     methods: {
-        init() {
+        async init() {
+            const response = await fetch('https://gw.alipayobjects.com/os/basement_prod/6cae02ab-4c29-44b2-b1fd-4005688febcb.json');
+            const remoteData = await response.json();
             let self = this;
             self.Util = G6.Util;
             const grid = new Grid()
             self.net = new G6.Graph({
                 container: 'flowChart',      // 容器ID
-                mode: 'edit',
+                modes: {
+                    default: ['drag-canvas', 'zoom-canvas', 'drag-node']  // 允许拖拽画布、放缩画布、拖拽节点
+                },
                 plugins: [grid],
-                
+                width: 1000,
+                height: 900,
+                fitView: true,
+                animate:true,
+                fitViewPadding: [ 20, 40, 50, 20 ]
             });
+            self.net.data(remoteData)
             self.net.render();
+
         }
     }
 }
