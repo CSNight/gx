@@ -2,17 +2,23 @@
     <div :class="{'has-logo':showLogo}">
         <logo v-if="showLogo" :collapse="isCollapse"/>
         <el-scrollbar wrap-class="scrollbar-wrapper">
-            <el-menu
-                class="el-menu-vertical"
-               
-                :collapse="isCollapse"
-                :background-color="variables.menuBg"
-                :text-color="variables.menuText"
-                :unique-opened="false"
-                :active-text-color="variables.menuActiveText"
-                :collapse-transition="false"
-                mode="vertical">
-            </el-menu>
+            <el-collapse>
+                <el-collapse-item>
+                    <template slot="title">
+                        <svg-icon icon-class="keyspace" style="color:#233657;width: 24px;height:24px"/>
+                        <span v-if="sidebar.opened">基础控件</span>
+                    </template>
+                    <el-tree empty-text="">
+                    
+                    </el-tree>
+                </el-collapse-item>
+                <el-collapse-item>
+                
+                </el-collapse-item>
+                <el-collapse-item>
+                
+                </el-collapse-item>
+            </el-collapse>
         </el-scrollbar>
     </div>
 </template>
@@ -23,7 +29,7 @@ import variables from '@/styles/variables.scss'
 import Logo from "@/layout/sider/Logo";
 
 export default {
-    components: {Logo },
+    components: {Logo},
     computed: {
         ...mapGetters([
             'sidebar'
