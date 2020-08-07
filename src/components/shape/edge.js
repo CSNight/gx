@@ -10,7 +10,7 @@ const uniqBy = (arr, key) => {
 };
 
 export default function (G6) {
-    G6.registerEdge('flow-polyline-round', {
+    G6.registerEdge('flow-poly-round', {
         options: {
             style: {
                 ...editorStyle.edgeStyle
@@ -237,7 +237,7 @@ export default function (G6) {
             let endPoint;
             while (openList.length > 0) {
                 let minCostPoint;
-                openList.forEach((p, i) => {
+                openList.forEach((p) => {
                     if (!p.parent)
                         p.f = 0;
                     if (!minCostPoint)
@@ -258,7 +258,7 @@ export default function (G6) {
                     const inOpen = openList.find(o => o.x === p.x && o.y === p.y);
                     const currentG = this.getCost(p, minCostPoint);
                     if (closeList.find(o => o.x === p.x && o.y === p.y)) {
-
+                        console.log(p)
                     } else if (inOpen) {
                         if (p.g > currentG) {
                             p.parent = minCostPoint;
@@ -328,4 +328,104 @@ export default function (G6) {
             return polylinePoints;
         },
     }, 'polyline');
+    G6.registerEdge('flow-cubic', {
+        options: {
+            style: {
+                ...editorStyle.edgeStyle
+            },
+            stateStyles: {
+                selected: {
+                    lineWidth: editorStyle.edgeSelectedStyle.lineWidth,
+                },
+                hover: {
+                    stroke: editorStyle.edgeActivedStyle.stroke,
+                }
+            }
+        },
+        setState(name, value, item) {
+            const group = item.getContainer();
+            const path = group.getChildByIndex(0);
+            if (name === 'selected') {
+                if (value) {
+                    path.attr('lineWidth', this.options.stateStyles.selected.lineWidth);
+                    path.attr('stroke', this.options.style.stroke);
+                } else {
+                    path.attr('lineWidth', this.options.style.lineWidth);
+                }
+            } else if (name === 'hover') {
+                if (value)
+                    path.attr('stroke', this.options.stateStyles.hover.stroke);
+                else
+                    path.attr('stroke', this.options.style.stroke);
+            }
+        },
+    }, 'cubic');
+    G6.registerEdge('flow-poly', {
+        options: {
+            style: {
+                radius: 0,
+                offset: 5,
+                x: 0,
+                y: 0,
+                ...editorStyle.edgeStyle
+            },
+            stateStyles: {
+                selected: {
+                    lineWidth: editorStyle.edgeSelectedStyle.lineWidth,
+                },
+                hover: {
+                    stroke: editorStyle.edgeActivedStyle.stroke,
+                }
+            }
+        },
+        setState(name, value, item) {
+            const group = item.getContainer();
+            const path = group.getChildByIndex(0);
+            if (name === 'selected') {
+                if (value) {
+                    path.attr('lineWidth', this.options.stateStyles.selected.lineWidth);
+                    path.attr('stroke', this.options.style.stroke);
+                } else {
+                    path.attr('lineWidth', this.options.style.lineWidth);
+                }
+            } else if (name === 'hover') {
+                if (value)
+                    path.attr('stroke', this.options.stateStyles.hover.stroke);
+                else
+                    path.attr('stroke', this.options.style.stroke);
+            }
+        }
+    },'polyline');
+    G6.registerEdge('flow-line', {
+        options: {
+            style: {
+                ...editorStyle.edgeStyle
+            },
+            stateStyles: {
+                selected: {
+                    lineWidth: editorStyle.edgeSelectedStyle.lineWidth,
+                },
+                hover: {
+                    stroke: editorStyle.edgeActivedStyle.stroke,
+                }
+            }
+        },
+        setState(name, value, item) {
+            const group = item.getContainer();
+            const path = group.getChildByIndex(0);
+            if (name === 'selected') {
+                if (value) {
+                    path.attr('lineWidth', this.options.stateStyles.selected.lineWidth);
+                    path.attr('stroke', this.options.style.stroke);
+                } else {
+                    path.attr('lineWidth', this.options.style.lineWidth);
+                }
+            } else if (name === 'hover') {
+                if (value)
+                    path.attr('stroke', this.options.stateStyles.hover.stroke);
+                else
+                    path.attr('stroke', this.options.style.stroke);
+            }
+        },
+    }, 'line')
 }
