@@ -6,25 +6,22 @@
             <div :class="{'fixed-header':fixedHeader}">
                 <navbar/>
             </div>
-            <app-main/>
+            <section class="app-main">
+                <EditorGraph ref="main"/>
+            </section>
         </div>
     </div>
 </template>
 
 <script>
-import AppMain from './AppMain'
 import Sidebar from './sider/SideBar'
-import Navbar from "./nav/Navbar";
+import Navbar from "./toolbar/Navbar";
+import EditorGraph from "./editor/EditorGraph";
 
 export default {
     name: "Index",
-    data() {
-        return {
-            // eslint-disable-next-line no-undef
-        }
-    },
     components: {
-        AppMain,
+        EditorGraph,
         Navbar,
         Sidebar,
     }, computed: {
@@ -41,9 +38,7 @@ export default {
             return {
                 hideSidebar: !this.sidebar.opened,
                 openSidebar: this.sidebar.opened,
-                withoutAnimation: this.sidebar.withoutAnimation,
-                mobile: this.device === 'mobile',
-
+                withoutAnimation: this.sidebar.withoutAnimation
             }
         }
     },
@@ -56,21 +51,37 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-main-footer {
-    position: fixed;
-    bottom: 0;
+.app-main {
+    /* 50= navbar  50  */
+    min-height: calc(100vh);
     width: 100%;
-    border-top: 1px solid #aaaaaa;
-    font-size: 12px;
-    text-align: left;
-    line-height: 20px;
-    height: 20px !important;
-    background: linear-gradient(#ffffff 0%, #eeeeee 100%, #ffffff 0%);
-    color: #7a8b9a;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-    a {
-        position: relative;
-        bottom: 0;
+.fixed-header + .app-main {
+    padding-top: 50px;
+}
+</style>
+
+<style lang="scss">
+// fix css style bug in open el-dialog
+.el-popup-parent--hidden {
+    .fixed-header {
+        padding-right: 15px;
     }
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #ddd;
+    border-radius: 3px;
 }
 </style>

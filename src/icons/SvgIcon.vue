@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import {isExternal} from '@/layout/linkVal'
+import {isExternal} from '@/utils/utils'
 
 export default {
     name: 'SvgIcon',

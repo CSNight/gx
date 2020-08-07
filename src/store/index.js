@@ -17,6 +17,7 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 const getters = {
     sidebar: state => state.app.sidebar,
     baseUrl: state => state.app.BASE_API,
+    globalGraph: state => state.app.globalGraph
 };
 const store = new Vuex.Store({
     modules,

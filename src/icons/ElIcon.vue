@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import {isExternal} from '../layout/linkVal'
+import {isExternal} from '@/utils/utils'
 
 export default {
     name: 'ElIcon',
@@ -23,7 +23,7 @@ export default {
             return isExternal(this.iconClass)
         },
         iconName() {
-
+            
             return `el-icon-${this.iconClass}`
         },
         styleExternalIcon() {

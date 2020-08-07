@@ -1,5 +1,5 @@
 <template>
-    <div id="flowChart" style="position: relative"></div>
+    <div id="flowChart" style="position: relative;box-shadow: 0 0 10px 4px rgba(0,0,0,0.1)"></div>
 </template>
 
 <script>
@@ -8,6 +8,7 @@ import Grid from "@antv/g6/lib/plugins/grid";
 import EditorWrapper from "@/components/plugins/EditorWrapper";
 import registerBehavior from '../../components/behavior'
 import registerShape from '../../components/shape'
+import {mapMutations} from "vuex";
 
 export default {
     name: "EditorGraph",
@@ -21,8 +22,18 @@ export default {
             this.init();
         })
     },
+    computed: {
+        containerWidth: () => {
+            return document.querySelector('.app-main').offsetWidth - 100
+        },
+        containerHeight: () => {
+            return document.querySelector('.app-main').offsetHeight - 100
+        },
+    },
     methods: {
+        ...mapMutations('app', ['SET_GRAPH']),
         init() {
+            
             const initData = {
                 // 点集
                 nodes: [{
@@ -58,12 +69,13 @@ export default {
             this.globalNet = new G6.Graph({
                 container: 'flowChart',      // 容器ID
                 modes: {
-                    edit: ['drag-canvas', 'drag-node', 'itemAlign','deleteItem', 'hoverAnchorActivated', 'hoverNodeActivated', 'zoom-canvas', 'clickSelected', 'dragEdge']  // 允许拖拽画布、放缩画布、拖拽节点
+                    brush: ['brush-select'],
+                    edit: ['drag-canvas', 'drag-node', 'itemAlign', 'deleteItem', 'hoverAnchorActivated', 'hoverNodeActivated', 'zoom-canvas', 'clickSelected', 'dragEdge']  // 允许拖拽画布、放缩画布、拖拽节点
                 },
                 mode: 'edit',
                 plugins: [grid, editorWrapper],
-                width: this.$parent.$el.clientWidth,
-                height: this.$parent.$el.clientHeight - 10,
+                width: this.containerWidth,
+                height: this.containerHeight,
                 animate: true,
                 fitView: true
             });
@@ -71,10 +83,15 @@ export default {
             this.globalNet.render();
             this.globalNet.zoomTo(1);
             this.globalNet.setMode('edit')
-            window.addEventListener("resize", this.resizeFunc);
+            window.addEventListener("resize", () => {
+                this.resizeFunc(this)
+            });
+            this.SET_GRAPH(this.globalNet)
         },
-        resizeFunc: () => {
-            this.globalNet.changeSize(this.$parent.$el.clientWidth, this.$parent.$el.clientHeight - 10);
+        resizeFunc: (_this) => {
+            setTimeout(() => {
+                _this.globalNet.changeSize(document.querySelector('.app-main').offsetWidth - 100, document.querySelector('.app-main').offsetHeight - 100);
+            }, 100)
         }
     }, beforeDestroy() {
         window.removeEventListener("resize", this.resizeFunc);

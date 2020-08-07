@@ -5,6 +5,7 @@ const state = {
         opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
         withoutAnimation: false
     },
+    globalGraph: null,
     BASE_API: 'https://127.0.0.1:8443'
 };
 
@@ -24,7 +25,9 @@ const mutations = {
         state.sidebar.opened = false;
         state.sidebar.withoutAnimation = withoutAnimation
     },
-
+    SET_GRAPH(state, n) {
+        state.globalGraph = n
+    },
 };
 
 const actions = {

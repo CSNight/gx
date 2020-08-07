@@ -18,6 +18,10 @@ export function dateFormat(fmt, date) {
     return fmt;
 }
 
+export function isExternal(path) {
+    return /^(https?:|mailto:|tel:)/.test(path)
+}
+
 export function getFileSize(size) {
     if (size < 0) {
         return "未知"
