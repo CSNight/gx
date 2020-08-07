@@ -42,7 +42,7 @@ const nodeDefinition = {
         const bbox = group.get('children')[0].getBBox();
         this.getAnchorPoints().forEach((p, i) => {
             const anchorContainer = group.addGroup();
-            const anchor = new Anchor({
+            new Anchor({
                 group: anchorContainer,
                 index: i,
                 model: {
@@ -144,7 +144,6 @@ const nodeDefinition = {
             }
         } else if (name === 'hover') {
             const rect = group.getChildByIndex(0);
-            console.log(rect)
             const text = group.getChildByIndex(1);
             if (value) {
                 rect.attr('cursor', this.options.stateStyles.hover.cursor);

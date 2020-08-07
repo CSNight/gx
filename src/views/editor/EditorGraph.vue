@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import G6 from "@antv/g6";
+import G6 from '@antv/g6/lib';
 import Grid from "@antv/g6/lib/plugins/grid";
 import EditorWrapper from "@/components/plugins/EditorWrapper";
 import registerBehavior from '../../components/behavior'
@@ -42,13 +42,13 @@ export default {
                 }],
                 // 边集
                 edges: [
-                    // 表示一条从 node1 节点连接到 node2 节点的边
-                    {
-                        source: 'node1',  // 起始点 id
-                        target: 'node2',  // 目标点 id
-                        label: '我是连线',   // 边的文本
-                        type: 'flow-polyline-round'
-                    }
+                    // // 表示一条从 node1 节点连接到 node2 节点的边
+                    // {
+                    //     source: 'node1',  // 起始点 id
+                    //     target: 'node2',  // 目标点 id
+                    //     label: '我是连线',   // 边的文本
+                    //     type: 'flow-polyline-round'
+                    // }
                 ]
             };
             registerBehavior(G6);
@@ -58,7 +58,7 @@ export default {
             this.globalNet = new G6.Graph({
                 container: 'flowChart',      // 容器ID
                 modes: {
-                    edit: ['drag-canvas', 'hoverAnchorActivated', 'hoverNodeActivated', 'zoom-canvas','clickSelected','dragEdge']  // 允许拖拽画布、放缩画布、拖拽节点
+                    edit: ['drag-canvas','drag-node', 'hoverAnchorActivated', 'hoverNodeActivated', 'zoom-canvas', 'clickSelected', 'dragEdge']  // 允许拖拽画布、放缩画布、拖拽节点
                 },
                 mode: 'edit',
                 plugins: [grid, editorWrapper],

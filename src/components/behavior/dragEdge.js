@@ -1,5 +1,6 @@
 import editorStyle from "@/utils/defaultStyle";
 import {Marker} from '@antv/g-canvas/lib/shape';
+import {guid2} from "@/utils/utils";
 
 export default function (G6) {
     G6.registerBehavior('dragEdge', {
@@ -45,26 +46,13 @@ export default function (G6) {
             const anchorIndex = e.item.get('index');
             const point = node.getAnchorPoints()[anchorIndex];
             this.target = e.item;
-            const groupId = node.get('groupId');
-            if (groupId) {
-                const subProcessNode = e.target.getParent().getParent().getParent().getParent().get('item');
-                const subProcessBBox = subProcessNode.getBBox();
-                this.origin = {
-                    x: point.x + subProcessBBox.x + subProcessBBox.width / 2,
-                    y: point.y + subProcessBBox.y + subProcessBBox.height / 2,
-                    sourceNode: node,
-                    sourceAnchor: anchorIndex
-                };
-                this.dragEdgeBeforeShowAnchorBySub(subProcessNode);
-            } else {
-                this.origin = {
-                    x: point.x,
-                    y: point.y,
-                    sourceNode: node,
-                    sourceAnchor: anchorIndex
-                };
-                this.dragEdgeBeforeShowAnchor(e);
-            }
+            this.origin = {
+                x: point.x,
+                y: point.y,
+                sourceNode: node,
+                sourceAnchor: anchorIndex
+            };
+            this.dragEdgeBeforeShowAnchor();
             this.graph.set('edgeDragging', true);
         },
         onDrag(e) {
@@ -91,21 +79,9 @@ export default function (G6) {
         sameNode(e) {
             return e.target instanceof Marker && e.target.getParent() && e.target.getParent().getParent().get('item').get('id') === this.origin.sourceNode.get('id')
         },
-        dragEdgeBeforeShowAnchorBySub(subProcessNode) {
-            const group = subProcessNode.getContainer();
-            group.nodes.forEach(a => {
-                const aGroup = a.getContainer();
-                aGroup.showAnchor();
-                aGroup.anchorShapes.forEach(b => b.get('item').showHotpot());
-            });
-        },
-        dragEdgeBeforeShowAnchor(e) {
+        dragEdgeBeforeShowAnchor() {
             const sourceGroupId = this.origin.sourceNode.getModel().groupId;
             this.graph.getNodes().forEach(node => {
-                if (node.getModel().clazz === 'start'
-                    || node.getModel().clazz === 'timerStart'
-                    || node.getModel().clazz === 'messageStart')
-                    return;
                 const targetGroupId = node.getModel().groupId;
                 if (!sourceGroupId && targetGroupId || sourceGroupId && !targetGroupId || sourceGroupId !== targetGroupId)
                     return;
@@ -121,11 +97,7 @@ export default function (G6) {
                 this._updateEdgeDelegate(item, x, y);
                 return;
             }
-            const node = e.target.getParent().getParent().get('item');
-            const groupId = node.get('groupId');
-
-            this._addEdge(e);
-
+            this._addEdge();
             this._clearAllAnchor();
             this.graph.paint();
         },
@@ -157,23 +129,15 @@ export default function (G6) {
         },
         _addEdge() {
             if (this.origin.targetNode) {
-                const timestamp = new Date().getTime();
                 const addModel = {
-                    id: 'flow' + timestamp,
-                    clazz: 'flow',
+                    id: 'flow$' + guid2(),
+                    type: 'flow-polyline-round',
                     source: this.origin.sourceNode.get('id'),
                     target: this.origin.targetNode.get('id'),
                     sourceAnchor: this.origin.sourceAnchor,
                     targetAnchor: this.origin.targetAnchor,
                 };
-                if (this.graph.executeCommand) {
-                    this.graph.executeCommand('add', {
-                        type: 'edge',
-                        addModel: addModel
-                    });
-                } else {
-                    this.graph.add('edge', addModel);
-                }
+                this.graph.addItem('edge', addModel);
             }
         }
     });

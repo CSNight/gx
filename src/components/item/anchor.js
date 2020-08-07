@@ -24,7 +24,7 @@ export default class Anchor extends Item {
         this.hotpot = this.getContainer().addShape('marker', {
             attrs: {
                 ...this.get('model').style,
-                ...editorStyle.anchorHotsoptStyle
+                ...editorStyle.anchorHotspotStyle
             },
             name: 'hotpot-shape',
             draggable: true,
@@ -33,18 +33,15 @@ export default class Anchor extends Item {
         this.getKeyShape().toFront();
     }
 
-    setActived() {
+    setActivated() {
         this.update({style: {...editorStyle.anchorPointHoverStyle}});
     }
 
-    clearActived() {
+    clearActivated() {
         this.update({style: {...editorStyle.anchorPointStyle}});
     }
 
-    setHotspotActived(act) {
-        this.hotpot &&
-        (act ?
-            this.hotpot.attr(editorStyle.anchorHotsoptActivedStyle)
-            : this.hotpot.attr(editorStyle.anchorHotsoptStyle))
+    setHotspotActivated(act) {
+        this.hotpot && (act ? this.hotpot.attr(editorStyle.anchorHotspotActivatedStyle) : this.hotpot.attr(editorStyle.anchorHotspotStyle))
     }
 }

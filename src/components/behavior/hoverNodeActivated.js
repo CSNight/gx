@@ -22,10 +22,8 @@ export default function (G6) {
             }
         },
         onNodeLeave(e) {
-            console.log(!(e.target instanceof Marker))
-            console.log(!this.graph.get('edgeDragging'))
             if (!(e.target instanceof Marker) && !this.graph.get('edgeDragging')) {
-                this.graph.setItemState(e.item, 'show-anchor', true);
+                this.graph.setItemState(e.item, 'show-anchor', false);
             }
         },
     });
