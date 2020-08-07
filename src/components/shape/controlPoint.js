@@ -2,7 +2,7 @@ import editorStyle from "@/utils/defaultStyle";
 import {shapeBase} from '@antv/g6/lib/shape/shapeBase';
 import Shape from '@antv/g6/lib/shape/shape';
 
-export default function (G6) {
+export default function () {
     Shape.registerFactory('controlPoint', {
         defaultShapeType: 'marker',
         getShape: (type) => {

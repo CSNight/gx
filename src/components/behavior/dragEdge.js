@@ -131,7 +131,7 @@ export default function (G6) {
             if (this.origin.targetNode) {
                 const addModel = {
                     id: 'flow$' + guid2(),
-                    type: 'flow-polyline-round',
+                    type: 'flow-poly-round',
                     source: this.origin.sourceNode.get('id'),
                     target: this.origin.targetNode.get('id'),
                     sourceAnchor: this.origin.sourceAnchor,
