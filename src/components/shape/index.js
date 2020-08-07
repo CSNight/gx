@@ -5,8 +5,8 @@ import registerFlowNode from './flowNode'
 import registerEdge from './edge'
 
 export default function (G6) {
-    registerAnchor(G6);
-    registerControlPoint(G6);
+    registerAnchor();
+    registerControlPoint();
     registerNode(G6);
     registerFlowNode(G6);
     registerEdge(G6);
