@@ -72,10 +72,10 @@ const nodeDefinition = {
             group.anchorShapes && group.anchorShapes.forEach(a => a.remove());
             group.anchorShapes = [];
         };
-        group.clearHotpotActived = () => {
+        group.clearHotpotActivated = () => {
             group.anchorShapes && group.anchorShapes.forEach(a => {
                 if (a.isAnchor)
-                    a.setHotspotActived(false);
+                    a.setHotspotActivated(false);
             });
         };
     },

@@ -8,7 +8,6 @@ export default function (G6) {
             }
         },
         onKeydown(e) {
-            console.log(e)
             const items = this.graph.get('selectedItems');
             const focus = this.graph.get('focusGraphWrapper');
             if (e.keyCode === 46 && items && items.length > 0 && focus) {

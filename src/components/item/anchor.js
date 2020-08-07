@@ -6,7 +6,7 @@ export default class Anchor extends Item {
     constructor(cfg) {
         super(deepMix(cfg, {
             type: 'anchor',
-            isActived: false,
+            isActivated: false,
             model: {
                 type: 'anchor',
                 style: {
@@ -31,14 +31,6 @@ export default class Anchor extends Item {
         });
         this.hotpot.toFront();
         this.getKeyShape().toFront();
-    }
-
-    setActivated() {
-        this.update({style: {...editorStyle.anchorPointHoverStyle}});
-    }
-
-    clearActivated() {
-        this.update({style: {...editorStyle.anchorPointStyle}});
     }
 
     setHotspotActivated(act) {
