@@ -58,7 +58,7 @@ export default {
             this.globalNet = new G6.Graph({
                 container: 'flowChart',      // 容器ID
                 modes: {
-                    edit: ['drag-canvas','drag-node', 'hoverAnchorActivated', 'hoverNodeActivated', 'zoom-canvas', 'clickSelected', 'dragEdge']  // 允许拖拽画布、放缩画布、拖拽节点
+                    edit: ['drag-canvas', 'drag-node', 'itemAlign','deleteItem', 'hoverAnchorActivated', 'hoverNodeActivated', 'zoom-canvas', 'clickSelected', 'dragEdge']  // 允许拖拽画布、放缩画布、拖拽节点
                 },
                 mode: 'edit',
                 plugins: [grid, editorWrapper],
