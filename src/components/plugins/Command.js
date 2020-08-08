@@ -1,4 +1,5 @@
-import {mix, clone, isString} from '@antv/util';
+import {clone, isString, mix} from '@antv/util';
+import {guid2} from "@/utils/utils";
 
 class Command {
 
@@ -212,10 +213,8 @@ class Command {
                 const addModel = this.pasteData.model;
                 addModel.x && (addModel.x += 10);
                 addModel.y && (addModel.y += 10);
-                const {clazz = 'userTask'} = addModel;
-                const timestamp = new Date().getTime();
-                const id = clazz + timestamp;
-                addModel.id = id;
+                let oldId = addModel.id.split('$')[0]
+                addModel.id = oldId + "$" + guid2();
                 const item = graph.add(this.pasteData.type, addModel);
                 item.toFront();
             },
@@ -303,7 +302,12 @@ class Command {
                 }
             },
             back: function (graph) {
-
+                const items = graph.get('selectedItems');
+                if (items && items.length > 0) {
+                    const item = graph.findById(items[0]);
+                    item.toBack();
+                    graph.paint();
+                }
             },
         });
         cmdPlugin.registerCommand('toBack', {
@@ -321,7 +325,12 @@ class Command {
                 }
             },
             back: function (graph) {
-
+                const items = graph.get('selectedItems');
+                if (items && items.length > 0) {
+                    const item = graph.findById(items[0]);
+                    item.toFront();
+                    graph.paint();
+                }
             },
         });
     }
