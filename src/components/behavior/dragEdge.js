@@ -137,7 +137,15 @@ export default function (G6) {
                     sourceAnchor: this.origin.sourceAnchor,
                     targetAnchor: this.origin.targetAnchor,
                 };
-                this.graph.addItem('edge', addModel);
+                if (this.graph.executeCommand) {
+                    this.graph.executeCommand('add', {
+                        type: 'edge',
+                        addModel: addModel
+                    });
+                } else {
+                    this.graph.addItem('edge', addModel);
+                }
+
             }
         }
     });

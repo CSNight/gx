@@ -4,7 +4,7 @@
         <sidebar class="sidebar-container"/>
         <div class="main-container">
             <div :class="{'fixed-header':fixedHeader}">
-                <navbar/>
+                <navbar ref="topBar"/>
             </div>
             <section class="app-main">
                 <EditorGraph ref="main"/>

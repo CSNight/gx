@@ -7,21 +7,28 @@ export default function (G6) {
                 maxDistance: 2,
                 alignLineStyle: {stroke: '#FA8C16', lineWidth: 1},
                 tolerance: 5,
+                originModel: null,
                 _alignLines: [],
             };
         },
         getEvents() {
             return {
+                'node:dragstart': 'onDragStart',
                 'node:drag': 'onDrag',
                 'node:dragend': 'onDragEnd',
             };
+        },
+        onDragStart(e) {
+            this.originModel = Object.assign({}, e.item.getModel());
         },
         onDrag(e) {
             this._clearAlignLine();
             this._itemAlign(e.item);
         },
-        onDragEnd() {
+        onDragEnd(e) {
+            this._updateCommand(e.item);
             this._clearAlignLine();
+            this.originModel = null;
         },
         _itemAlign(item) {
             const bbox = item.getBBox()
@@ -203,5 +210,14 @@ export default function (G6) {
             this._alignLines = [];
             this.graph.paint();
         },
+        _updateCommand(item) {
+            if (this.graph.executeCommand) {
+                this.graph.executeCommand('update', {
+                    itemId: item.get('id'),
+                    updateModel: Object.assign({}, item.getModel()),
+                    originModel: Object.assign({}, this.originModel)
+                });
+            }
+        }
     });
 }

@@ -9,6 +9,8 @@ import EditorWrapper from "@/components/plugins/EditorWrapper";
 import registerBehavior from '../../components/behavior'
 import registerShape from '../../components/shape'
 import {mapMutations} from "vuex";
+import ToolBar from "@/components/plugins/ToolBar";
+import Command from "@/components/plugins/Command";
 
 export default {
     name: "EditorGraph",
@@ -33,19 +35,19 @@ export default {
     methods: {
         ...mapMutations('app', ['SET_GRAPH']),
         init() {
-            
+
             const initData = {
                 // 点集
                 nodes: [{
                     id: 'node1', // 节点的唯一标识
-                    
+
                     type: 'task-node',
                     x: 100,      // 节点横坐标
                     y: 200,      // 节点纵坐标
                     label: '起始点' // 节点文本
                 }, {
                     id: 'node2',
-                    
+
                     type: 'task-node',
                     x: 300,
                     y: 200,
@@ -66,6 +68,11 @@ export default {
             registerShape(G6)
             const grid = new Grid();
             const editorWrapper = new EditorWrapper({container: this.$el});
+            const command = new Command();
+            const toolbar = new ToolBar({
+                container: this.$parent.$refs.topBar.$refs.toolPanel.$el,
+                toolbarCom: this.$parent.$refs.topBar.$refs.toolPanel
+            })
             this.globalNet = new G6.Graph({
                 container: 'flowChart',      // 容器ID
                 modes: {
@@ -73,7 +80,7 @@ export default {
                     edit: ['drag-canvas', 'drag-node', 'itemAlign', 'deleteItem', 'hoverAnchorActivated', 'hoverNodeActivated', 'zoom-canvas', 'clickSelected', 'dragEdge']  // 允许拖拽画布、放缩画布、拖拽节点
                 },
                 mode: 'edit',
-                plugins: [grid, editorWrapper],
+                plugins: [grid, editorWrapper, command, toolbar],
                 width: this.containerWidth,
                 height: this.containerHeight,
                 animate: true,
