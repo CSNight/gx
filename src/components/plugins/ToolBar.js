@@ -54,7 +54,7 @@ class ToolBar {
         const children = parentNode.querySelectorAll('button[tool-click]');
         each(children, (child) => {
             const cmdName = child.getAttribute('tool-click');
-            this.get('toolbarCom').barComState[cmdName] = !graph.commandEnable(cmdName)
+            this.get('toolbarCom').barComState[cmdName] = graph.commandEnable(cmdName)
         })
     }
 

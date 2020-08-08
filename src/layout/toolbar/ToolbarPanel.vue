@@ -1,29 +1,29 @@
 <template>
     <div class="toolbar">
-        <el-button :disabled="barComState.undo" size="mini" class="command" tool-click="undo"
+        <el-button :disabled="!barComState.undo" size="mini" class="command" tool-click="undo"
                    icon="iconfont icon-undo"/>
-        <el-button :disabled="barComState.redo" size="mini" class="command" tool-click="redo"
+        <el-button :disabled="!barComState.redo" size="mini" class="command" tool-click="redo"
                    icon="iconfont icon-redo"/>
         <el-divider direction="vertical"/>
-        <el-button :disabled="barComState.copy" size="mini" class="command" tool-click="copy"
+        <el-button :disabled="!barComState.copy" size="mini" class="command" tool-click="copy"
                    icon="iconfont icon-copy-o"/>
-        <el-button :disabled="barComState.paste" size="mini" class="command" tool-click="paste"
+        <el-button :disabled="!barComState.paste" size="mini" class="command" tool-click="paste"
                    icon="iconfont icon-paster-o"/>
-        <el-button :disabled="barComState.delete" size="mini" class="command" tool-click="delete"
+        <el-button :disabled="!barComState.delete" size="mini" class="command" tool-click="delete"
                    icon="iconfont icon-delete-o"/>
         <el-divider direction="vertical"/>
-        <el-button :disabled="barComState.zoomIn" size="mini" class="command" tool-click="zoomIn"
+        <el-button :disabled="!barComState.zoomIn" size="mini" class="command" tool-click="zoomIn"
                    icon="iconfont icon-zoom-in-o"/>
-        <el-button :disabled="barComState.zoomOut" size="mini" class="command" tool-click="zoomOut"
+        <el-button :disabled="!barComState.zoomOut" size="mini" class="command" tool-click="zoomOut"
                    icon="iconfont icon-zoom-out-o"/>
-        <el-button :disabled="barComState.resetZoom" size="mini" class="command" tool-click="resetZoom"
+        <el-button :disabled="!barComState.resetZoom" size="mini" class="command" tool-click="resetZoom"
                    icon="iconfont icon-actual-size-o"/>
-        <el-button :disabled="barComState.autoFit" size="mini" class="command" tool-click="autoFit"
+        <el-button :disabled="!barComState.autoFit" size="mini" class="command" tool-click="autoFit"
                    icon="iconfont icon-fit"/>
         <el-divider direction="vertical"/>
-        <el-button :disabled="barComState.toFront" size="mini" class="command" tool-click="toFront"
+        <el-button :disabled="!barComState.toFront" size="mini" class="command" tool-click="toFront"
                    icon="iconfont icon-to-front"/>
-        <el-button :disabled="barComState.toBack" size="mini" class="command" tool-click="toBack"
+        <el-button :disabled="!barComState.toBack" size="mini" class="command" tool-click="toBack"
                    icon="iconfont icon-to-back"/>
     </div>
 </template>
