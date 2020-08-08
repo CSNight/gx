@@ -77,7 +77,7 @@ export default {
                 container: 'flowChart',      // 容器ID
                 modes: {
                     brush: ['brush-select'],
-                    edit: ['drag-canvas', 'drag-node', 'itemAlign', 'deleteItem', 'hoverAnchorActivated', 'hoverNodeActivated', 'zoom-canvas', 'clickSelected', 'dragEdge']  // 允许拖拽画布、放缩画布、拖拽节点
+                    edit: ['drag-canvas', 'drag-node', 'itemAlign', 'deleteItem', 'contextMenu', 'hoverAnchorActivated', 'hoverNodeActivated', 'zoom-canvas', 'clickSelected', 'dragEdge']  // 允许拖拽画布、放缩画布、拖拽节点
                 },
                 mode: 'edit',
                 plugins: [grid, editorWrapper, command, toolbar],
@@ -95,10 +95,8 @@ export default {
             });
             this.SET_GRAPH(this.globalNet)
         },
-        resizeFunc: (_this) => {
-            setTimeout(() => {
-                _this.globalNet.changeSize(document.querySelector('.app-main').offsetWidth - 100, document.querySelector('.app-main').offsetHeight - 100);
-            }, 100)
+        resizeFunc() {
+            this.globalNet.changeSize(document.querySelector('.app-main').offsetWidth - 100, document.querySelector('.app-main').offsetHeight - 100);
         }
     }, beforeDestroy() {
         window.removeEventListener("resize", this.resizeFunc);

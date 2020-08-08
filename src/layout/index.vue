@@ -1,5 +1,6 @@
 <template>
     <div :class="classObj" class="app-wrapper">
+        <context-menu ref="contextMenu"/>
         <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"></div>
         <sidebar class="sidebar-container"/>
         <div class="main-container">
@@ -17,10 +18,12 @@
 import Sidebar from './sider/SideBar'
 import Navbar from "./toolbar/Navbar";
 import EditorGraph from "./editor/EditorGraph";
+import ContextMenu from "./editor/ContextMenu";
 
 export default {
     name: "Index",
     components: {
+        ContextMenu,
         EditorGraph,
         Navbar,
         Sidebar,
@@ -55,7 +58,6 @@ export default {
     /* 50= navbar  50  */
     min-height: calc(100vh);
     width: 100%;
-    position: relative;
     overflow: hidden;
     display: flex;
     align-items: center;
