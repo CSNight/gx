@@ -28,7 +28,12 @@ export default {
     },
     methods: {
         toggleSideBar() {
-            this.$store.dispatch('app/toggleSideBar')
+            this.$store.dispatch('app/toggleSideBar').then((() => {
+                setTimeout(() => {
+                    this.$parent.$refs.main.resizeFunc()
+                }, 100)
+            }))
+
         },
         toggleFullScreen() {
             if (this.full) {
