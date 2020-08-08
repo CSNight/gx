@@ -16,7 +16,6 @@ export default function (G6) {
             }
         },
         onClick(e) {
-            console.log(e)
             this._clearSelected();
             this.graph.setItemState(e.item, 'selected', true);
             let selectedItems = this.graph.get('selectedItems');
