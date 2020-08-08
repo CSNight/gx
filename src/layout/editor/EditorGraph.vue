@@ -11,6 +11,7 @@ import registerShape from '../../components/shape'
 import {mapMutations} from "vuex";
 import ToolBar from "@/components/plugins/ToolBar";
 import Command from "@/components/plugins/Command";
+import ContextMenu from "@/components/plugins/ContextMenu";
 
 export default {
     name: "EditorGraph",
@@ -69,6 +70,10 @@ export default {
             const grid = new Grid();
             const editorWrapper = new EditorWrapper({container: this.$el});
             const command = new Command();
+            const contextMenu = new ContextMenu({
+                container: this.$parent.$refs.contextMenu.$el,
+                contextCom: this.$parent.$refs.contextMenu
+            })
             const toolbar = new ToolBar({
                 container: this.$parent.$refs.topBar.$refs.toolPanel.$el,
                 toolbarCom: this.$parent.$refs.topBar.$refs.toolPanel
@@ -80,7 +85,7 @@ export default {
                     edit: ['drag-canvas', 'drag-node', 'itemAlign', 'deleteItem', 'contextMenu', 'hoverAnchorActivated', 'hoverNodeActivated', 'zoom-canvas', 'clickSelected', 'dragEdge']  // 允许拖拽画布、放缩画布、拖拽节点
                 },
                 mode: 'edit',
-                plugins: [grid, editorWrapper, command, toolbar],
+                plugins: [grid, editorWrapper, command, toolbar, contextMenu],
                 width: this.containerWidth,
                 height: this.containerHeight,
                 animate: true,

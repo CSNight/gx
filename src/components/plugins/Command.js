@@ -300,15 +300,7 @@ class Command {
                     item.toFront();
                     graph.paint();
                 }
-            },
-            back: function (graph) {
-                const items = graph.get('selectedItems');
-                if (items && items.length > 0) {
-                    const item = graph.findById(items[0]);
-                    item.toBack();
-                    graph.paint();
-                }
-            },
+            }
         });
         cmdPlugin.registerCommand('toBack', {
             queue: false,
@@ -323,15 +315,7 @@ class Command {
                     item.toBack();
                     graph.paint();
                 }
-            },
-            back: function (graph) {
-                const items = graph.get('selectedItems');
-                if (items && items.length > 0) {
-                    const item = graph.findById(items[0]);
-                    item.toFront();
-                    graph.paint();
-                }
-            },
+            }
         });
     }
 }

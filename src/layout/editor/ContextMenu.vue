@@ -1,24 +1,10 @@
 <template>
     <div class="contextMenu" v-show="isShow" :style="contextMenuStyle" @click.stop.prevent>
-        <div class="menu-item">
-            <span class="item-icon iconfont icon-copy-o"/>
-            <span class="item-label">复制</span>
-        </div>
-        <div class="menu-item">
-            <span class="item-icon iconfont icon-copy-o"/>
-            <span class="item-label">复制</span>
-        </div>
-        <div class="menu-item">
-            <span class="item-icon iconfont icon-copy-o"/>
-            <span class="item-label">复制</span>
-        </div>
-        <div class="menu-item">
-            <span class="item-icon iconfont icon-copy-o"/>
-            <span class="item-label">复制</span>
-        </div>
-        <div class="menu-item">
-            <span class="item-icon iconfont icon-copy-o"/>
-            <span class="item-label">复制</span>
+        <div v-show="item.show" v-for="(item) in contextMenuList" :key="item.cmd"
+             :class="'menu-item '+(item.state?'':'disabled')"
+             :tool-click="item.cmd">
+            <span :class="'item-icon '+item.icon"/>
+            <span class="item-label">{{ item.label }}</span>
         </div>
     </div>
 </template>
@@ -32,8 +18,31 @@ export default {
         return {
             isShow: false,
             options: null,
+            menuState: {
+                node: ['copy', 'paste', 'delete', 'toFront', 'toBack'],
+                edge: ['delete', 'toFront', 'toBack'],
+                root: ['paste'],
+            },
             contextMenuStyle: {},
-            contextMenuList: []
+            contextMenuList: {
+                copy: {
+                    cmd: 'copy', icon: 'iconfont icon-copy-o', label: '复制', state: true, show: true
+                }, paste: {
+                    cmd: 'paste', icon: 'iconfont icon-paster-o', label: '粘贴', state: true, show: true
+                }, delete: {
+                    cmd: 'delete', icon: 'iconfont icon-delete-o', label: '删除', state: true, show: true
+                }, toFront: {
+                    cmd: 'toFront', icon: 'iconfont icon-to-front', label: '上移', state: true, show: true
+                }, toBack: {
+                    cmd: 'toBack', icon: 'iconfont icon-to-back', label: '下移', state: true, show: true
+                }, zoomIn: {
+                    cmd: 'zoomIn', icon: 'iconfont icon-zoom-in-o', label: '放大', state: true, show: true
+                }, zoomOut: {
+                    cmd: 'zoomOut', icon: 'iconfont icon-zoom-out-o', label: '缩小', state: true, show: true
+                }, autoFit: {
+                    cmd: 'autoFit', icon: 'iconfont icon-fit', label: '适应屏幕', state: true, show: true
+                }
+            }
         }
     },
     computed: {
@@ -49,15 +58,20 @@ export default {
     }, methods: {
         doShow(data) {
             this.options = data
-            //_t.handleContextMenuList()
+            this.handleContextList()
             // 处理样式
             this.handleContextMenuStyle()
             this.isShow = true
         },
         doHide() {
             this.options = null
-            this.contextMenuList = []
             this.isShow = false
+        },
+        handleContextList() {
+            let contextList = this.menuState[this.options.type] || [];
+            for (let key in this.contextMenuList) {
+                this.contextMenuList[key].show = contextList.indexOf(key) !== -1;
+            }
         },
         handleContextMenuStyle() {
             const style = {}
@@ -67,23 +81,21 @@ export default {
             this.$nextTick(function () {
                 const x = this.options.x !== undefined ? (parseInt(this.options.x) > 0 ? parseInt(this.options.x) : 0) : 0
                 const y = this.options.y !== undefined ? (parseInt(this.options.y) > 0 ? parseInt(this.options.y) : 0) : 0
-                // 判断是否超出边界
-                if (document.documentElement && document.documentElement.clientHeight && document.documentElement.clientWidth) {
-                    const winHeight = document.documentElement.clientHeight
-                    const winWidth = document.documentElement.clientWidth
-                    const elHeight = this.$el.clientHeight
-                    const elWidth = this.$el.clientWidth
-                    if (x + elWidth > winWidth) {
-                        style['right'] = '10px'
-                    } else {
-                        style['left'] = x + 'px'
-                    }
-                    if (y + elHeight > winHeight) {
-                        style['bottom'] = '42px'
-                    } else {
-                        style['top'] = y + 'px'
-                    }
+                const winHeight = this.$parent.$el.clientHeight
+                const winWidth = this.$parent.$el.clientWidth
+                const elHeight = this.$el.clientHeight
+                const elWidth = this.$el.clientWidth
+                if (x + elWidth > winWidth) {
+                    style['right'] = '10px'
+                } else {
+                    style['left'] = x + 'px'
                 }
+                if (y + elHeight > winHeight) {
+                    style['bottom'] = '42px'
+                } else {
+                    style['top'] = y + 'px'
+                }
+
                 this.contextMenuStyle = style
             })
         },
@@ -115,7 +127,7 @@ export default {
         align-items: center;
         opacity: .6;
         margin: 0 2px;
-        color: #233657;
+
         text-align: left;
         min-width: 100px;
         cursor: pointer;
@@ -135,9 +147,18 @@ export default {
 
         &.disabled {
             cursor: not-allowed;
+
+            .item-icon {
+                color: #ccc
+            }
+
+            .item-label {
+                color: #ccc
+            }
         }
 
         .item-icon {
+            color: #233657;
             display: inline-block;
             width: 16px;
             height: 16px;
@@ -145,6 +166,7 @@ export default {
         }
 
         .item-label {
+            color: #233657;
             flex: 1 1 auto;
             font-size: 14px;
             margin: 0 10px;
