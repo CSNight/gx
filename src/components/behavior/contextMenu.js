@@ -29,10 +29,17 @@ export default function (G6) {
                 target: e.target,
                 item: e.item,
                 type: null,
+                eqt: true,//是否在选中对象上打开右键菜单
                 x: e.clientX,
                 y: e.clientY,
                 canvasX: e.canvasX,
                 canvasY: e.canvasY
+            }
+            const items = this.graph.get('selectedItems');
+            if (items && items.length > 0) {
+                if (items.indexOf(e.item.get('id')) === -1) {
+                    evt.eqt = false;
+                }
             }
             if (!e.item) {
                 evt.type = 'root'
@@ -41,7 +48,6 @@ export default function (G6) {
             } else if (e.item instanceof Edge) {
                 evt.type = 'edge'
             }
-
             this.graph.emit('editor:contextmenu:open', evt)
         },
         onCloseContextMenu(e) {

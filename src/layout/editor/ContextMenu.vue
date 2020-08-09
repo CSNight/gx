@@ -21,7 +21,7 @@ export default {
             menuState: {
                 node: ['copy', 'paste', 'delete', 'toFront', 'toBack'],
                 edge: ['delete', 'toFront', 'toBack'],
-                root: ['paste'],
+                root: ['paste', 'zoomIn', 'zoomOut', 'autoFit', 'resetZoom'],
             },
             contextMenuStyle: {},
             contextMenuList: {
@@ -41,6 +41,8 @@ export default {
                     cmd: 'zoomOut', icon: 'iconfont icon-zoom-out-o', label: '缩小', state: true, show: true
                 }, autoFit: {
                     cmd: 'autoFit', icon: 'iconfont icon-fit', label: '适应屏幕', state: true, show: true
+                }, resetZoom: {
+                    cmd: 'resetZoom', icon: 'iconfont icon-actual-size-o', label: '重置画布', state: true, show: true
                 }
             }
         }
