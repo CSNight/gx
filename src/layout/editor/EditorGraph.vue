@@ -3,15 +3,15 @@
 </template>
 
 <script>
+import {mapMutations} from "vuex";
 import G6 from '@antv/g6/lib';
-import Grid from "@antv/g6/lib/plugins/grid";
-import EditorWrapper from "@/components/plugins/EditorWrapper";
 import registerBehavior from '../../components/behavior'
 import registerShape from '../../components/shape'
-import {mapMutations} from "vuex";
-import ToolBar from "@/components/plugins/ToolBar";
+import Grid from "@antv/g6/lib/plugins/grid";
 import Command from "@/components/plugins/Command";
 import ContextMenu from "@/components/plugins/ContextMenu";
+import EditorWrapper from "@/components/plugins/EditorWrapper";
+import ToolBar from "@/components/plugins/ToolBar";
 
 export default {
     name: "EditorGraph",
@@ -70,15 +70,28 @@ export default {
                 container: 'flowChart',      // 容器ID
                 modes: {
                     brush: [this.initBrushBehavior()],
-                    edit: ['drag-canvas', 'tooltip', 'edge-tooltip', 'drag-node', 'itemAlign', 'deleteItem', 'contextMenu',
-                        'hoverAnchorActivated', 'hoverNodeActivated', 'zoom-canvas', 'clickSelected', 'dragEdge']  // 允许拖拽画布、放缩画布、拖拽节点
+                    edit: ['drag-canvas',
+                        {
+                            type: 'tooltip', formatText: (e) => {
+                                return '<div class="g6-component-tooltip">' +
+                                    '<h4 class="tooltip-type">type:' + e.type + '</h4>' +
+                                    '<span class="tooltip-id">ID:' + e.label + '</span></div>'
+                            }
+                        }, {
+                            type: 'edge-tooltip', formatText: (e) => {
+                                return '<div class="g6-component-tooltip">' +
+                                    '<h4 class="tooltip-type">type:' + e.type + '</h4>' +
+                                    '<span class="tooltip-id">ID:' + e.label + '</span></div>'
+                            }
+                        }, 'drag-node', 'itemAlign', 'deleteItem', 'contextMenu', 'hoverAnchorActivated',
+                        'hoverNodeActivated', 'zoom-canvas', 'clickSelected', 'dragEdge']
                 },
-                mode: 'edit',
                 plugins: plugins,
                 width: this.containerWidth,
                 height: this.containerHeight,
-                animate: true,
-                fitView: true
+                fitView: true,
+                fitCenter: true,
+                animate: true
             });
             this.globalNet.data(this.initData);
             this.globalNet.render();
@@ -127,6 +140,23 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.g6-component-tooltip {
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #545454;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px 8px;
+    box-shadow: rgb(174, 174, 174) 0 0 10px;
+}
 
+.tooltip-type {
+    padding: 0;
+    margin: 0;
+}
+
+.tooltip-id {
+    color: #531dab;
+}
 </style>

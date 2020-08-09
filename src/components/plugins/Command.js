@@ -89,7 +89,7 @@ class Command {
 
     destroyPlugin() {
         this._events = null;
-        this._cfgs = null;
+        this._cfgs = {};
         this.list = [];
         this.queue = [];
         this.destroyed = true;
