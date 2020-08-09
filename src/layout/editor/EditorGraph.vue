@@ -81,8 +81,20 @@ export default {
             this.globalNet = new G6.Graph({
                 container: 'flowChart',      // 容器ID
                 modes: {
-                    brush: ['brush-select'],
-                    edit: ['drag-canvas', 'drag-node', 'itemAlign', 'deleteItem', 'contextMenu', 'hoverAnchorActivated', 'hoverNodeActivated', 'zoom-canvas', 'clickSelected', 'dragEdge']  // 允许拖拽画布、放缩画布、拖拽节点
+                    brush: [{
+                        type: 'brush-select',
+                        trigger: 'ctrl',
+                        onSelect: (selectedNodes) => {
+                            this.globalNet.setMode('edit')
+                            let selectedItems = [];
+                            for (let i = 0; i < selectedNodes.length; i++) {
+                                selectedItems.push(selectedNodes[i].get('id'))
+                            }
+                            this.globalNet.set('selectedItems', selectedItems);
+                            this.globalNet.emit('afteritemselected', selectedItems);
+                        }
+                    }],
+                    edit: ['drag-canvas', 'tooltip', 'edge-tooltip', 'drag-node', 'itemAlign', 'deleteItem', 'contextMenu', 'hoverAnchorActivated', 'hoverNodeActivated', 'zoom-canvas', 'clickSelected', 'dragEdge']  // 允许拖拽画布、放缩画布、拖拽节点
                 },
                 mode: 'edit',
                 plugins: [grid, editorWrapper, command, toolbar, contextMenu],

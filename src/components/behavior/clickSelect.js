@@ -16,6 +16,9 @@ export default function (G6) {
             }
         },
         onClick(e) {
+            if (this.graph.getCurrentMode() === 'brush') {
+                this.graph.setMode('edit');
+            }
             this._clearSelected();
             this.graph.setItemState(e.item, 'selected', true);
             let selectedItems = this.graph.get('selectedItems');
@@ -45,6 +48,9 @@ export default function (G6) {
         onCanvasClick() {
             this._clearSelected();
             this.graph.emit('afteritemselected', []);
+            if (this.graph.getCurrentMode() === 'brush') {
+                this.graph.setMode('edit');
+            }
         },
         _clearGroupSelected(group) {
             const selected = group.findAll((subGroup) => {

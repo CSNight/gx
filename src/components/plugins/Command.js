@@ -161,6 +161,7 @@ class Command {
                 const cmd = manager.queue[manager.current];
                 cmd && cmd.execute(graph);
                 manager.current++;
+                graph.set('selectedItems', [])
             },
             shortcutCodes: [['metaKey', 'shiftKey', 'z'], ['ctrlKey', 'shiftKey', 'z']],
         });
@@ -180,6 +181,7 @@ class Command {
                     graph.zoomTo(zoom)
                 }
                 manager.current--;
+                graph.set('selectedItems', [])
             },
             shortcutCodes: [['metaKey', 'z'], ['ctrlKey', 'z']],
         });
@@ -195,12 +197,15 @@ class Command {
                 manager.clipboard = [];
                 const items = graph.get('selectedItems');
                 if (items && items.length > 0) {
-                    const item = graph.findById(items[0]);
-                    if (item) {
-                        manager.clipboard.push({type: item.get('type'), model: item.getModel()});
+                    for (let i = 0; i < items.length; i++) {
+                        const item = graph.findById(items[i]);
+                        if (item) {
+                            manager.clipboard.push({type: item.get('type'), model: item.getModel()});
+                        }
                     }
                 }
             },
+            shortcutCodes: ['ctrlKey'],
         });
         cmdPlugin.registerCommand('paste', {
             enable: function (graph) {
@@ -209,14 +214,16 @@ class Command {
             },
             method: function (graph) {
                 const manager = cmdPlugin.get('_command');
-                this.pasteData = clone(manager.clipboard[0]);
-                const addModel = this.pasteData.model;
-                addModel.x && (addModel.x += 10);
-                addModel.y && (addModel.y += 10);
-                let oldId = addModel.id.split('$')[0]
-                addModel.id = oldId + "$" + guid2();
-                const item = graph.add(this.pasteData.type, addModel);
-                item.toFront();
+                for (let i = 0; i < manager.clipboard.length; i++) {
+                    this.pasteData = clone(manager.clipboard[i]);
+                    const addModel = this.pasteData.model;
+                    addModel.x && (addModel.x += 10);
+                    addModel.y && (addModel.y += 10);
+                    let oldId = addModel.id.split('$')[0]
+                    addModel.id = oldId + "$" + guid2();
+                    const item = graph.add(this.pasteData.type, addModel);
+                    item.toFront();
+                }
             },
         });
         cmdPlugin.registerCommand('zoomIn', {
@@ -315,6 +322,15 @@ class Command {
                     item.toBack();
                     graph.paint();
                 }
+            }
+        });
+        cmdPlugin.registerCommand('brushSelect', {
+            queue: false,
+            enable: function () {
+                return true
+            },
+            execute: function (graph) {
+                graph.setMode('brush')
             }
         });
     }

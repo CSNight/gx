@@ -25,6 +25,8 @@
                    icon="iconfont icon-to-front"/>
         <el-button :disabled="!barComState.toBack" size="mini" class="command" tool-click="toBack"
                    icon="iconfont icon-to-back"/>
+        <el-button :disabled="!barComState.brushSelect" size="mini" class="command" tool-click="brushSelect"
+                   icon="fa fa-expand"/>
     </div>
 </template>
 
@@ -34,7 +36,7 @@ export default {
     data() {
         return {
             barComState: {
-                undo: false, redo: false,
+                undo: false, redo: false, brushSelect: false,
                 copy: false, paste: false, delete: false,
                 zoomIn: false, zoomOut: false, resetZoom: false, autoFit: false,
                 toFront: false, toBack: false,
@@ -47,7 +49,7 @@ export default {
 <style lang="scss" scoped>
 .toolbar {
     border-left: 3px solid #2bf;
-    padding: 0px 10px;
+    padding: 0 10px;
     display: flex;
     align-items: center;
     justify-content: left;
