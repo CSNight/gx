@@ -18,6 +18,33 @@ export default {
     data() {
         return {
             globalNet: null,
+            initData: {
+                // 点集
+                nodes: [{
+                    id: 'node1', // 节点的唯一标识
+                    type: 'task-node',
+                    x: 100,      // 节点横坐标
+                    y: 200,      // 节点纵坐标
+                    label: '起始点', // 节点文本
+                    meta: {a: '111'}
+                }, {
+                    id: 'node2',
+                    type: 'task-node',
+                    x: 300,
+                    y: 200,
+                    label: '目标点'
+                }],
+                // 边集
+                edges: [
+                    // // 表示一条从 node1 节点连接到 node2 节点的边
+                    {
+                        source: 'node1',  // 起始点 id
+                        target: 'node2',  // 目标点 id
+                        label: '我是连线',   // 边的文本
+                        type: 'flow-poly-round'
+                    }
+                ]
+            }
         }
     },
     created() {
@@ -36,37 +63,33 @@ export default {
     methods: {
         ...mapMutations('app', ['SET_GRAPH']),
         init() {
-
-            const initData = {
-                // 点集
-                nodes: [{
-                    id: 'node1', // 节点的唯一标识
-
-                    type: 'task-node',
-                    x: 100,      // 节点横坐标
-                    y: 200,      // 节点纵坐标
-                    label: '起始点' // 节点文本
-                }, {
-                    id: 'node2',
-
-                    type: 'task-node',
-                    x: 300,
-                    y: 200,
-                    label: '目标点'
-                }],
-                // 边集
-                edges: [
-                    // // 表示一条从 node1 节点连接到 node2 节点的边
-                    // {
-                    //     source: 'node1',  // 起始点 id
-                    //     target: 'node2',  // 目标点 id
-                    //     label: '我是连线',   // 边的文本
-                    //     type: 'flow-polyline-round'
-                    // }
-                ]
-            };
             registerBehavior(G6);
             registerShape(G6)
+            let plugins = this.initPlugins();
+            this.globalNet = new G6.Graph({
+                container: 'flowChart',      // 容器ID
+                modes: {
+                    brush: [this.initBrushBehavior()],
+                    edit: ['drag-canvas', 'tooltip', 'edge-tooltip', 'drag-node', 'itemAlign', 'deleteItem', 'contextMenu',
+                        'hoverAnchorActivated', 'hoverNodeActivated', 'zoom-canvas', 'clickSelected', 'dragEdge']  // 允许拖拽画布、放缩画布、拖拽节点
+                },
+                mode: 'edit',
+                plugins: plugins,
+                width: this.containerWidth,
+                height: this.containerHeight,
+                animate: true,
+                fitView: true
+            });
+            this.globalNet.data(this.initData);
+            this.globalNet.render();
+            this.globalNet.zoomTo(1);
+            this.globalNet.setMode('edit')
+            window.addEventListener("resize", () => {
+                this.resizeFunc(this)
+            });
+            this.SET_GRAPH(this.globalNet)
+        },
+        initPlugins() {
             const grid = new Grid();
             const editorWrapper = new EditorWrapper({container: this.$el});
             const command = new Command();
@@ -78,39 +101,22 @@ export default {
                 container: this.$parent.$refs.topBar.$refs.toolPanel.$el,
                 toolbarCom: this.$parent.$refs.topBar.$refs.toolPanel
             })
-            this.globalNet = new G6.Graph({
-                container: 'flowChart',      // 容器ID
-                modes: {
-                    brush: [{
-                        type: 'brush-select',
-                        trigger: 'ctrl',
-                        onSelect: (selectedNodes) => {
-                            this.globalNet.setMode('edit')
-                            let selectedItems = [];
-                            for (let i = 0; i < selectedNodes.length; i++) {
-                                selectedItems.push(selectedNodes[i].get('id'))
-                            }
-                            this.globalNet.set('selectedItems', selectedItems);
-                            this.globalNet.emit('afteritemselected', selectedItems);
-                        }
-                    }],
-                    edit: ['drag-canvas', 'tooltip', 'edge-tooltip', 'drag-node', 'itemAlign', 'deleteItem', 'contextMenu', 'hoverAnchorActivated', 'hoverNodeActivated', 'zoom-canvas', 'clickSelected', 'dragEdge']  // 允许拖拽画布、放缩画布、拖拽节点
-                },
-                mode: 'edit',
-                plugins: [grid, editorWrapper, command, toolbar, contextMenu],
-                width: this.containerWidth,
-                height: this.containerHeight,
-                animate: true,
-                fitView: true
-            });
-            this.globalNet.data(initData);
-            this.globalNet.render();
-            this.globalNet.zoomTo(1);
-            this.globalNet.setMode('edit')
-            window.addEventListener("resize", () => {
-                this.resizeFunc(this)
-            });
-            this.SET_GRAPH(this.globalNet)
+            return [grid, editorWrapper, command, toolbar, contextMenu]
+        },
+        initBrushBehavior() {
+            return {
+                type: 'brush-select',
+                trigger: 'ctrl',
+                onSelect: (selectedNodes) => {
+                    this.globalNet.setMode('edit')
+                    let selectedItems = [];
+                    for (let i = 0; i < selectedNodes.length; i++) {
+                        selectedItems.push(selectedNodes[i].get('id'))
+                    }
+                    this.globalNet.set('selectedItems', selectedItems);
+                    this.globalNet.emit('afteritemselected', selectedItems);
+                }
+            }
         },
         resizeFunc() {
             this.globalNet.changeSize(document.querySelector('.app-main').offsetWidth - 100, document.querySelector('.app-main').offsetHeight - 100);

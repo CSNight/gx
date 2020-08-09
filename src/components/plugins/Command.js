@@ -205,7 +205,7 @@ class Command {
                     }
                 }
             },
-            shortcutCodes: ['ctrlKey'],
+            shortcutCodes: ['Control', 'c'],
         });
         cmdPlugin.registerCommand('paste', {
             enable: function (graph) {
@@ -225,6 +225,7 @@ class Command {
                     item.toFront();
                 }
             },
+            shortcutCodes: [['Control', 'v']],
         });
         cmdPlugin.registerCommand('zoomIn', {
             queue: false,

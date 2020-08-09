@@ -17,10 +17,10 @@ export default function (G6) {
             },
             stateStyles: {
                 selected: {
-                    lineWidth: editorStyle.edgeSelectedStyle.lineWidth,
+                    ...editorStyle.edgeSelectedStyle
                 },
                 hover: {
-                    stroke: editorStyle.edgeActivedStyle.stroke,
+                    ...editorStyle.edgeActivatedStyle,
                 }
             }
         },
@@ -30,9 +30,10 @@ export default function (G6) {
             if (name === 'selected') {
                 if (value) {
                     path.attr('lineWidth', this.options.stateStyles.selected.lineWidth);
-                    path.attr('stroke', this.options.style.stroke);
+                    path.attr('stroke', this.options.stateStyles.selected.stroke);
                 } else {
                     path.attr('lineWidth', this.options.style.lineWidth);
+                    path.attr('stroke', this.options.style.stroke);
                 }
             } else if (name === 'hover') {
                 if (value)
@@ -256,16 +257,15 @@ export default function (G6) {
                     && !this.crossBBox([sBBox, tBBox], minCostPoint, p));
                 neighbor.forEach(p => {
                     const inOpen = openList.find(o => o.x === p.x && o.y === p.y);
+                    const inClose = closeList.find(o => o.x === p.x && o.y === p.y)
                     const currentG = this.getCost(p, minCostPoint);
-                    if (closeList.find(o => o.x === p.x && o.y === p.y)) {
-                        console.log(p)
-                    } else if (inOpen) {
+                    if (inOpen && !inClose) {
                         if (p.g > currentG) {
                             p.parent = minCostPoint;
                             p.g = currentG;
                             p.f = p.g + p.h;
                         }
-                    } else {
+                    } else if (!inClose) {
                         p.parent = minCostPoint;
                         p.g = currentG;
                         let h = this.getCost(p, tPoint);
@@ -338,7 +338,7 @@ export default function (G6) {
                     lineWidth: editorStyle.edgeSelectedStyle.lineWidth,
                 },
                 hover: {
-                    stroke: editorStyle.edgeActivedStyle.stroke,
+                    stroke: editorStyle.edgeActivatedStyle.stroke,
                 }
             }
         },
@@ -374,7 +374,7 @@ export default function (G6) {
                     lineWidth: editorStyle.edgeSelectedStyle.lineWidth,
                 },
                 hover: {
-                    stroke: editorStyle.edgeActivedStyle.stroke,
+                    stroke: editorStyle.edgeActivatedStyle.stroke,
                 }
             }
         },
@@ -395,7 +395,7 @@ export default function (G6) {
                     path.attr('stroke', this.options.style.stroke);
             }
         }
-    },'polyline');
+    }, 'polyline');
     G6.registerEdge('flow-line', {
         options: {
             style: {
@@ -406,7 +406,7 @@ export default function (G6) {
                     lineWidth: editorStyle.edgeSelectedStyle.lineWidth,
                 },
                 hover: {
-                    stroke: editorStyle.edgeActivedStyle.stroke,
+                    stroke: editorStyle.edgeActivatedStyle.stroke,
                 }
             }
         },

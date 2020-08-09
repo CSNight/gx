@@ -80,7 +80,7 @@ export default {
             if (!this.options) {
                 return style
             }
-            this.$nextTick(function () {
+            this.$nextTick(() => {
                 const x = this.options.x !== undefined ? (parseInt(this.options.x) > 0 ? parseInt(this.options.x) : 0) : 0
                 const y = this.options.y !== undefined ? (parseInt(this.options.y) > 0 ? parseInt(this.options.y) : 0) : 0
                 const winHeight = this.$parent.$el.clientHeight
@@ -97,7 +97,6 @@ export default {
                 } else {
                     style['top'] = y + 'px'
                 }
-
                 this.contextMenuStyle = style
             })
         },
