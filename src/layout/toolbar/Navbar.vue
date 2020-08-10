@@ -1,18 +1,19 @@
 <template>
     <div class="navbar">
-        <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar"/>
+        <div class="hamburger-container" style="padding: 0 15px;">
+            <svg-icon icon-class="hamburger" @click="toggleSideBar" :class="{'is-active':sidebar.opened}"/>
+        </div>
         <toolbar-panel ref="toolPanel"/>
     </div>
 </template>
 
 <script>
 import {mapGetters} from 'vuex'
-import Hamburger from "./Hamburger";
 import ToolbarPanel from "./ToolbarPanel";
 
 export default {
     name: 'navbar',
-    components: {ToolbarPanel, Hamburger},
+    components: {ToolbarPanel},
     computed: {
         ...mapGetters([
             'sidebar', 'globalGraph'
@@ -92,6 +93,17 @@ export default {
         
         &:hover {
             background: rgba(0, 0, 0, .025)
+        }
+        
+        .hamburger {
+            display: inline-block;
+            vertical-align: middle;
+            width: 20px;
+            height: 20px;
+        }
+        
+        .hamburger.is-active {
+            transform: rotate(180deg);
         }
     }
     
