@@ -5,6 +5,7 @@ import dragEdge from "./dragEdge";
 import itemAlign from "./itemAlign";
 import deleteItem from "@/components/behavior/deleteItem";
 import contextMenu from "@/components/behavior/contextMenu";
+import dragAddNode from "@/components/behavior/dragAddNode";
 
 export default function (G6) {
     clickSelect(G6);
@@ -14,4 +15,5 @@ export default function (G6) {
     itemAlign(G6);
     deleteItem(G6);
     contextMenu(G6);
+    dragAddNode(G6);
 }
