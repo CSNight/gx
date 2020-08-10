@@ -2,23 +2,7 @@
     <div :class="{'has-logo':showLogo}">
         <logo v-if="showLogo" :collapse="isCollapse"/>
         <el-scrollbar wrap-class="scrollbar-wrapper">
-            <el-collapse>
-                <el-collapse-item>
-                    <template slot="title">
-                        <svg-icon icon-class="keyspace" style="color:#233657;width: 24px;height:24px"/>
-                        <span v-if="sidebar.opened">基础控件</span>
-                    </template>
-                    <el-tree empty-text="">
-                    
-                    </el-tree>
-                </el-collapse-item>
-                <el-collapse-item>
-                
-                </el-collapse-item>
-                <el-collapse-item>
-                
-                </el-collapse-item>
-            </el-collapse>
+            <item-panel ref="itemPanel"/>
         </el-scrollbar>
     </div>
 </template>
@@ -27,9 +11,10 @@
 import {mapGetters} from 'vuex'
 import variables from '@/styles/variables.scss'
 import Logo from "@/layout/sider/Logo";
+import ItemPanel from "@/layout/sider/ItemPanel";
 
 export default {
-    components: {Logo},
+    components: {ItemPanel, Logo},
     computed: {
         ...mapGetters([
             'sidebar'

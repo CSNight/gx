@@ -56,13 +56,13 @@ export default {
     width: 100%;
     height: 100%;
     margin-left: 10px;
-
+    
     .el-button {
         border: 1px solid transparent;
         color: #606266;
         margin-right: 5px;
     }
-
+    
     .el-button.is-disabled, .el-button.is-disabled:focus, .el-button.is-disabled:hover {
         color: #C0C4CC;
         cursor: not-allowed;
@@ -70,11 +70,11 @@ export default {
         background-color: #FFF;
         border: 1px solid transparent;
     }
-
+    
     .el-button--mini {
         padding: 5px 5px;
     }
-
+    
     .el-button:hover {
         color: #3a8ee6;
         border: 1px dashed #3a8ee6;
