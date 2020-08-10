@@ -66,18 +66,18 @@ export default {
     background: #233657;
     text-align: center;
     overflow: hidden;
-    
+
     & .sidebar-logo-link {
         height: 100%;
         width: 100%;
-        
+
         & .sidebar-logo {
             width: 32px;
             height: 32px;
             vertical-align: middle;
             margin-right: 12px;
         }
-        
+
         & .sidebar-title {
             display: inline-block;
             margin: 0;
@@ -89,7 +89,7 @@ export default {
             vertical-align: middle;
         }
     }
-    
+
     &.collapse {
         .sidebar-logo {
             margin-right: 0;

@@ -3,9 +3,7 @@
         <context-menu ref="contextMenu"/>
         <sidebar ref="sidebar" class="sidebar-container"/>
         <div class="main-container">
-            <div class="{fixed-header:true}">
-                <navbar ref="topBar"/>
-            </div>
+            <navbar ref="topBar"/>
             <section class="app-main">
                 <div id="flowChart" style="position: relative;box-shadow: 0 0 10px 4px rgba(0,0,0,0.1)"></div>
             </section>

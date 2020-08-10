@@ -7,17 +7,17 @@
             </template>
             <el-tree empty-text="" :data="tree">
                 <span class="custom-tree-node" slot-scope="{ node }">
-                     <img data-item="{clazz:'start',size:'30*30',label:'aaa'}"
+                     <img alt="" data-item="{clazz:'start',size:'30*30',label:'aaa'}"
                           :src="require('../../assets/logo.png')" style="width:24px;height:24px"/>
                      <span>{{ node.label }}</span>
                 </span>
             </el-tree>
         </el-collapse-item>
         <el-collapse-item>
-        
+
         </el-collapse-item>
         <el-collapse-item>
-        
+
         </el-collapse-item>
     </el-collapse>
 </template>
@@ -72,9 +72,9 @@ export default {
     flex: 1;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: left;
     font-size: 14px;
-    
+
     /deep/ .ins {
         background: transparent;
         border: none;
@@ -83,12 +83,12 @@ export default {
         padding-left: 0;
         overflow: hidden;
     }
-    
+
     /deep/ .dbBtn {
         width: 60px;
         padding-right: 22px;
     }
-    
+
     /deep/ .fac {
         margin-right: 5px;
     }

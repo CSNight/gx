@@ -1,7 +1,7 @@
 <template>
     <div class="navbar">
-        <div class="hamburger-container" style="padding: 0 15px;">
-            <svg-icon icon-class="hamburger" @click="toggleSideBar" :class="{'is-active':sidebar.opened}"/>
+        <div class="hamburger-container" style="padding: 0 15px;" @click="toggleSideBar">
+            <svg-icon icon-class="hamburger" :class="'hamburger '+ (sidebar.opened?'is-active':'')"/>
         </div>
         <toolbar-panel ref="toolPanel"/>
     </div>
@@ -32,9 +32,9 @@ export default {
             this.$store.dispatch('app/toggleSideBar').then((() => {
                 setTimeout(() => {
                     this.$parent.resizeFunc()
-                }, 100)
+                }, 200)
             }))
-            
+
         },
         toggleFullScreen() {
             if (this.full) {
@@ -57,7 +57,7 @@ export default {
                 element.webkitRequestFullscreen();
             }
         },
-        
+
         //退出全屏
         exitFullscreen() {
             if (document.exitFullscreen) {
@@ -82,7 +82,7 @@ export default {
     background: #fff;
     box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
     display: flex;
-    
+
     .hamburger-container {
         line-height: 46px;
         height: 100%;
@@ -90,92 +90,25 @@ export default {
         cursor: pointer;
         transition: background .3s;
         -webkit-tap-highlight-color: transparent;
-        
+
         &:hover {
             background: rgba(0, 0, 0, .025)
         }
-        
+
         .hamburger {
             display: inline-block;
             vertical-align: middle;
             width: 20px;
             height: 20px;
         }
-        
+
         .hamburger.is-active {
             transform: rotate(180deg);
         }
     }
-    
+
     .breadcrumb-container {
         float: left;
-    }
-    
-    .right-menu {
-        float: right;
-        height: 100%;
-        line-height: 50px;
-        
-        &:focus {
-            outline: none;
-        }
-        
-        .tim-icons {
-            display: inline-block;
-            vertical-align: middle;
-            speak: none;
-            font-size: 18px;
-            text-transform: none;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        
-        .icon-sound-wave::before {
-            content: "\ea4b";
-        }
-        
-        .right-menu-item {
-            display: inline-block;
-            padding: 0 8px;
-            height: 100%;
-            font-size: 18px;
-            color: #5a5e66;
-            vertical-align: text-bottom;
-            
-            &.hover-effect {
-                cursor: pointer;
-                transition: background .3s;
-                
-                &:hover {
-                    background: rgba(0, 0, 0, .025)
-                }
-            }
-        }
-        
-        .avatar-container {
-            margin-right: 30px;
-            
-            .avatar-wrapper {
-                margin-top: 5px;
-                position: relative;
-                
-                .user-avatar {
-                    cursor: pointer;
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 10px;
-                    border: 1px solid #5a5e66;
-                }
-                
-                .el-icon-caret-bottom {
-                    cursor: pointer;
-                    position: absolute;
-                    right: -20px;
-                    top: 25px;
-                    font-size: 12px;
-                }
-            }
-        }
     }
 }
 </style>
