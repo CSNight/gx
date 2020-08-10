@@ -118,7 +118,7 @@ export default {
     justify-content: flex-start;
     align-content: flex-start;
     flex-direction: column;
-
+    
     .menu-item {
         height: 30px;
         line-height: 30px;
@@ -128,36 +128,36 @@ export default {
         align-items: center;
         opacity: .6;
         margin: 0 2px;
-
+        
         text-align: left;
         min-width: 100px;
         cursor: pointer;
-
+        
         &:hover {
             color: #233657;
             background: rgba(0, 0, 0, .1);
-
+            
             .tool-box {
                 visibility: visible;
             }
         }
-
+        
         &.active {
             opacity: 1;
         }
-
+        
         &.disabled {
             cursor: not-allowed;
-
+            
             .item-icon {
                 color: #ccc
             }
-
+            
             .item-label {
                 color: #ccc
             }
         }
-
+        
         .item-icon {
             color: #233657;
             display: inline-block;
@@ -165,7 +165,7 @@ export default {
             height: 16px;
             line-height: 1;
         }
-
+        
         .item-label {
             color: #233657;
             flex: 1 1 auto;

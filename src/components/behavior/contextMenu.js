@@ -37,7 +37,7 @@ export default function (G6) {
             }
             const items = this.graph.get('selectedItems');
             if (items && items.length > 0) {
-                if (items.indexOf(e.item.get('id')) === -1) {
+                if (e.item && items.indexOf(e.item.get('id')) === -1) {
                     evt.eqt = false;
                 }
             }
