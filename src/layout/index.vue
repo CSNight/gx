@@ -160,11 +160,12 @@ export default {
 <style lang="scss" scoped>
 .app-main {
     /* 50= navbar  50  */
-    min-height: calc(100vh);
+    min-height: calc(100vh - 50px);
     width: 100%;
     overflow: hidden;
     display: flex;
     align-items: center;
+    position: relative;
     justify-content: center;
 }
 

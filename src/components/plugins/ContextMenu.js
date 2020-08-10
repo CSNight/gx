@@ -43,7 +43,7 @@ class ContextMenu {
         each(children, (child) => {
             const cmdName = child.getAttribute('tool-click');
             child.addEventListener('click', () => {
-                graph.emit('context:contextmenu:close')
+                graph.emit('editor:contextmenu:close')
                 graph.commandEnable(cmdName) && graph.executeCommand(cmdName);
             });
         })

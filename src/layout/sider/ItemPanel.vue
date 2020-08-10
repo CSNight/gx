@@ -6,7 +6,7 @@
                 <span v-if="sidebar.opened">基础控件</span>
             </template>
             <el-tree empty-text="" :data="tree">
-                <span class="custom-tree-node" slot-scope="{ node,data }">
+                <span class="custom-tree-node" slot-scope="{ node }">
                      <img data-item="{clazz:'start',size:'30*30',label:'aaa'}"
                           :src="require('../../assets/logo.png')" style="width:24px;height:24px"/>
                      <span>{{ node.label }}</span>

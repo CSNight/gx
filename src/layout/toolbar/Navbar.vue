@@ -30,10 +30,10 @@ export default {
         toggleSideBar() {
             this.$store.dispatch('app/toggleSideBar').then((() => {
                 setTimeout(() => {
-                    this.$parent.$refs.main.resizeFunc()
+                    this.$parent.resizeFunc()
                 }, 100)
             }))
-
+            
         },
         toggleFullScreen() {
             if (this.full) {
@@ -56,7 +56,7 @@ export default {
                 element.webkitRequestFullscreen();
             }
         },
-
+        
         //退出全屏
         exitFullscreen() {
             if (document.exitFullscreen) {
@@ -81,7 +81,7 @@ export default {
     background: #fff;
     box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
     display: flex;
-
+    
     .hamburger-container {
         line-height: 46px;
         height: 100%;
@@ -89,25 +89,25 @@ export default {
         cursor: pointer;
         transition: background .3s;
         -webkit-tap-highlight-color: transparent;
-
+        
         &:hover {
             background: rgba(0, 0, 0, .025)
         }
     }
-
+    
     .breadcrumb-container {
         float: left;
     }
-
+    
     .right-menu {
         float: right;
         height: 100%;
         line-height: 50px;
-
+        
         &:focus {
             outline: none;
         }
-
+        
         .tim-icons {
             display: inline-block;
             vertical-align: middle;
@@ -117,11 +117,11 @@ export default {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
-
+        
         .icon-sound-wave::before {
             content: "\ea4b";
         }
-
+        
         .right-menu-item {
             display: inline-block;
             padding: 0 8px;
@@ -129,24 +129,24 @@ export default {
             font-size: 18px;
             color: #5a5e66;
             vertical-align: text-bottom;
-
+            
             &.hover-effect {
                 cursor: pointer;
                 transition: background .3s;
-
+                
                 &:hover {
                     background: rgba(0, 0, 0, .025)
                 }
             }
         }
-
+        
         .avatar-container {
             margin-right: 30px;
-
+            
             .avatar-wrapper {
                 margin-top: 5px;
                 position: relative;
-
+                
                 .user-avatar {
                     cursor: pointer;
                     width: 40px;
@@ -154,7 +154,7 @@ export default {
                     border-radius: 10px;
                     border: 1px solid #5a5e66;
                 }
-
+                
                 .el-icon-caret-bottom {
                     cursor: pointer;
                     position: absolute;
