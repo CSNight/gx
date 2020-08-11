@@ -125,7 +125,10 @@ class Command {
             },
             back: function (graph) {
                 const item = graph.findById(this.itemId);
-                graph.update(item, this.originModel);
+                if (item) {
+                    graph.update(item, this.originModel);
+                }
+
             },
         });
         cmdPlugin.registerCommand('delete', {
@@ -199,7 +202,7 @@ class Command {
                 if (items && items.length > 0) {
                     for (let i = 0; i < items.length; i++) {
                         const item = graph.findById(items[i]);
-                        if (item) {
+                        if (item && item.get('type') !== 'edge') {
                             manager.clipboard.push({type: item.get('type'), model: item.getModel()});
                         }
                     }
