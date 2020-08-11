@@ -44,7 +44,7 @@ export default {
     name: "Index",
     data() {
         return {
-            title: 'Oxygen',
+            title: 'GraphX',
             logo: require('../assets/logo.png'),
             globalNet: null,
             nodeShapes: [],
