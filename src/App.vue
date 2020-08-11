@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import layout from "./layout"
+import layout from "./editor"
 
 export default {
     name: 'app',
