@@ -52,12 +52,7 @@ export default {
             'sidebar', 'globalGraph'
         ])
     },
-    mounted() {
-        this.$nextTick(() => {
-            this.globalGraph.on('editor:contextmenu:open', this.doShow)
-            this.globalGraph.on('editor:contextmenu:close', this.doHide)
-        })
-    }, methods: {
+    methods: {
         doShow(data) {
             this.options = data
             this.handleContextList()
@@ -90,12 +85,12 @@ export default {
                 if (x + elWidth > winWidth) {
                     style['right'] = '10px'
                 } else {
-                    style['left'] = x + 'px'
+                    style['left'] = x + 10 + 'px'
                 }
                 if (y + elHeight > winHeight) {
                     style['bottom'] = '42px'
                 } else {
-                    style['top'] = y + 'px'
+                    style['top'] = y + 10 + 'px'
                 }
                 this.contextMenuStyle = style
             })

@@ -48,7 +48,11 @@ export default function (G6) {
             } else if (e.item instanceof Edge) {
                 evt.type = 'edge'
             }
-            this.graph.emit('editor:contextmenu:open', evt)
+            if (evt.eqt) {
+                this.graph.emit('editor:contextmenu:open', evt)
+            } else {
+                this.graph.emit('editor:contextmenu:close')
+            }
         },
         onCloseContextMenu(e) {
             e.preventDefault();
