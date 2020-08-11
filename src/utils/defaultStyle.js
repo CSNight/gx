@@ -30,7 +30,6 @@ export default {
         hoverEdge: 'default',
         hoverGroup: 'move',
         hoverUnEffectiveAnchor: 'default',
-        hoverEdgeControllPoint: 'crosshair',
         multiSelect: 'crosshair',
     },
     nodeDelegationStyle: {
