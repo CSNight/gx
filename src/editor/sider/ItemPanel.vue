@@ -45,7 +45,7 @@ export default {
     },
     data() {
         return {
-            tree: [], initialized: false
+            tree: []
         }
     },
     mounted() {
@@ -73,13 +73,10 @@ export default {
             console.log("initialize items panel")
             //TODO register Shape From Database
             registerFlowNode(G6);
-            if (!this.initialized) {
-                this.$nextTick(() => {
-                    console.log("initialize items plugins and shapes")
-                    this.$emit('init', {})
-                })
-                this.initialized = true;
-            }
+            this.$nextTick(() => {
+                console.log("initialize items plugins and shapes")
+                this.$emit('init', {})
+            })
         },
     }
 }

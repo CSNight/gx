@@ -42,6 +42,7 @@ import ItemPanel from './sider/ItemPanel'
 import ToolbarPanel from "./toolbar/ToolbarPanel";
 import ContextMenu from "./context/ContextMenu";
 import G6 from '@antv/g6/lib';
+import {clone, each} from '@antv/util';
 import registerBehavior from '@/components/behavior'
 import registerShape from '@/components/shape'
 import Grid from "@antv/g6/lib/plugins/grid";
@@ -50,7 +51,7 @@ import ContextMenuPlugin from "@/components/plugins/ContextMenu";
 import EditorWrapper from "@/components/plugins/EditorWrapper";
 import ToolBar from "@/components/plugins/ToolBar";
 import {EdgeTooltip, NodeTooltip} from "@/components/behavior/tooltip";
-import AddItemPanel from "@/components/plugins/AddItemPanel";
+import {createDom} from "@antv/dom-util";
 
 export default {
     name: "Index",
@@ -96,9 +97,9 @@ export default {
             handler: function (val) {
                 console.log("data change")
                 if (val && this.initialized) {
-                    this.globalNet.changeData(JSON.parse(JSON.stringify(val)));
+                    this.globalNet.changeData(clone(val));
                 }
-            },
+            }
         }
     },
     computed: {
@@ -173,15 +174,30 @@ export default {
             return [grid, editorWrapper, command, toolbar, contextMenu]
         },
         initItemPanel() {
-            const addItem = new AddItemPanel({
-                container: this.$refs.sidebar.$el,
-                itemsCom: this.$refs.sidebar
-            });
-            this.globalNet.addPlugin(addItem);
+            const parentNode = this.$refs.sidebar.$el;
+            const ghost = createDom('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"' + ' style="opacity:0" alt=""/>');
+            const children = parentNode.querySelectorAll('div[data-item]');
+            each(children, (child) => {
+                const addModel = (new Function("return " + child.getAttribute('data-item')))();
+                child.ondragstart = (e) => {
+                    this._dragAddNodeItem(e, ghost, addModel)
+                }
+                child.ondragend = this._dragEndNodeItem;
+            })
             this.initialized = true;
             if (this.modelData) {
-                this.globalNet.changeData(JSON.parse(JSON.stringify(this.modelData)));
+                this.globalNet.changeData(clone(this.modelData));
             }
+        },
+        _dragAddNodeItem(e, ghost, addModel) {
+            e.dataTransfer.setDragImage(ghost, 0, 0);
+            this.globalNet.set('addNodeDragging', true);
+            this.globalNet.set('addModel', addModel);
+        },
+        _dragEndNodeItem(e) {
+            this.globalNet.emit('canvas:mouseup', e);
+            this.globalNet.set('addNodeDragging', false);
+            this.globalNet.set('addModel', null);
         },
         initBrushBehavior() {
             return {
