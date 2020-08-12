@@ -4,7 +4,7 @@
             <el-collapse-item>
                 <template slot="title">
                     <svg-icon icon-class="keyspace" style="color:#233657;width: 24px;height:24px"/>
-                    <span v-if="sidebar.opened">基础控件</span>
+                    <span v-if="showLabel">基础控件</span>
                 </template>
                 <el-tree empty-text="" :data="tree">
                     <div class="custom-tree-node" draggable="true" slot-scope="{ node,data }"
@@ -12,23 +12,24 @@
                         <el-tooltip :content="node.label" placement="right" effect="light">
                             <fa-icon style="margin-left: 12px;color:#2bf" icon-class="fa-cube"/>
                         </el-tooltip>
-                        <span v-if="sidebar.opened">{{ node.label }}</span>
+                        <span v-if="showLabel">{{ node.label }}</span>
                     </div>
                 </el-tree>
             </el-collapse-item>
             <el-collapse-item>
-            
+
             </el-collapse-item>
             <el-collapse-item>
-            
+
             </el-collapse-item>
         </el-collapse>
     </el-scrollbar>
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import AddItemPanel from "@/components/plugins/AddItemPanel";
+
+import registerFlowNode from "@/components/shape/flowNode";
+import G6 from "@antv/g6/lib";
 
 export default {
     name: 'ItemPanel',
@@ -36,18 +37,23 @@ export default {
         nodes: {
             type: Array,
             required: true
+        },
+        showLabel: {
+            type: Boolean,
+            required: true
         }
     },
     data() {
         return {
-            tree: [],
+            tree: [], initialized: false
         }
     },
-    computed: {
-        ...mapGetters([
-            'sidebar',
-            'globalGraph'
-        ]),
+    mounted() {
+        this.$nextTick(() => {
+            if (this.nodes.length > 0) {
+                this.queryData();
+            }
+        })
     },
     watch: {
         nodes: {
@@ -65,20 +71,16 @@ export default {
                 val: 4
             }]
             console.log("initialize items panel")
-            this.$nextTick(() => {
-                this.initPlugins();
-            })
-        },
-        initPlugins() {
-            console.log("initialize items plugins and shapes")
             //TODO register Shape From Database
-            const addItem = new AddItemPanel({
-                container: this.$el,
-                itemsCom: this
-            });
-            this.globalGraph.addPlugin(addItem);
-            this.$emit('loadData', {})
-        }
+            registerFlowNode(G6);
+            if (!this.initialized) {
+                this.$nextTick(() => {
+                    console.log("initialize items plugins and shapes")
+                    this.$emit('init', {})
+                })
+                this.initialized = true;
+            }
+        },
     }
 }
 </script>
@@ -93,8 +95,8 @@ export default {
     align-items: center;
     justify-content: left;
     font-size: 14px;
-    
-    
+
+
 }
 
 </style>
