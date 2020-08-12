@@ -19,8 +19,8 @@ export default {
             isShow: false,
             options: null,
             menuState: {
-                node: ['copy', 'paste', 'delete', 'toFront', 'toBack'],
-                edge: ['delete', 'toFront', 'toBack'],
+                node: ['copy', 'paste', 'editDetail', 'delete', 'toFront', 'toBack'],
+                edge: ['editDetail', 'delete', 'toFront', 'toBack'],
                 root: ['paste', 'zoomIn', 'zoomOut', 'autoFit', 'resetZoom'],
             },
             contextMenuStyle: {},
@@ -29,6 +29,8 @@ export default {
                     cmd: 'copy', icon: 'iconfont icon-copy-o', label: '复制', state: true, show: true
                 }, paste: {
                     cmd: 'paste', icon: 'iconfont icon-paster-o', label: '粘贴', state: true, show: true
+                }, editDetail: {
+                    cmd: 'editDetail', icon: 'el-icon-edit', label: '编辑', state: true, show: true
                 }, delete: {
                     cmd: 'delete', icon: 'iconfont icon-delete-o', label: '删除', state: true, show: true
                 }, toFront: {

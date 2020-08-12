@@ -337,6 +337,17 @@ class Command {
                 graph.setMode('brush')
             }
         });
+        cmdPlugin.registerCommand('editDetail', {
+            queue: false,
+            enable: function (graph) {
+                const items = graph.get('selectedItems');
+                return items && items.length > 0;
+            },
+            execute: function (graph) {
+                const items = graph.get('selectedItems');
+                graph.emit('editDetail', items)
+            }
+        });
     }
 }
 
