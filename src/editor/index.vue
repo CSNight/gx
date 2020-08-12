@@ -21,6 +21,19 @@
             <section class="app-main">
                 <div id="flowChart" style="position: relative;box-shadow: 0 0 10px 4px rgba(0,0,0,0.1)"></div>
             </section>
+            <el-drawer
+                v-if="selectedModel!==null"
+                title="Model Detail"
+                size="25%"
+                :visible.sync="showDetail"
+                direction="rtl" @save="onItemCfgChange" @cancel="onItemCfgCancel">
+                <slot v-bind="{detail:selectedModel}"></slot>
+                <div class="btn">
+                    <el-button size="mini" type="primary" @click="onItemCfgChange">Save</el-button>
+                    <el-button size="mini" @click="onItemCfgCancel">Cancel</el-button>
+                </div>
+            
+            </el-drawer>
         </div>
     </div>
 </template>
@@ -48,6 +61,8 @@ export default {
             logo: require('../assets/logo.png'),
             globalNet: null,
             nodeShapes: [],
+            selectedModel: null,
+            detailUpdate: false,
             initData: {
                 // 点集
                 nodes: [{
@@ -94,11 +109,31 @@ export default {
                     this.init();
                 }
             }
+        },
+        detailUpdate: {
+            handler: function (val) {
+                if (val) {
+                    this.onItemCfgChange();
+                    this.detailUpdate = false;
+                } else {
+                    this.onItemCfgCancel();
+                }
+            }
         }
     },
     computed: {
         sidebar() {
             return this.$store.state.app.sidebar
+        },
+        showDetail: {
+            get: function () {
+                return this.selectedModel != null;
+            },
+            set: function (val) {
+                if (!val) {
+                    this.selectedModel = null
+                }
+            }
         },
         classObj() {
             return {
@@ -147,8 +182,7 @@ export default {
             window.addEventListener("resize", () => {
                 this.resizeFunc(this)
             });
-            this.globalNet.on('editor:contextmenu:open', this.$refs.contextMenu.doShow)
-            this.globalNet.on('editor:contextmenu:close', this.$refs.contextMenu.doHide)
+            this.initEvent()
             this.SET_GRAPH(this.globalNet)
         },
         initPlugins() {
@@ -184,6 +218,46 @@ export default {
                 }
             }
         },
+        initEvent() {
+            this.globalNet.on('editor:contextmenu:open', this.$refs.contextMenu.doShow)
+            this.globalNet.on('editor:contextmenu:close', this.$refs.contextMenu.doHide)
+            this.globalNet.on('editDetail', (items) => {
+                if (items && items.length > 0) {
+                    let item = this.globalNet.findById(items[0]);
+                    this.selectedModel = {...item.getModel()};
+                } else {
+                    this.selectedModel = null;
+                }
+            });
+        },
+        onItemCfgChange() {
+            this.$confirm('将修改该模块，是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                const items = this.globalNet.get('selectedItems');
+                if (items && items.length > 0) {
+                    let item = this.globalNet.findById(items[0]);
+                    if (this.globalNet.executeCommand) {
+                        this.globalNet.executeCommand('update', {
+                            itemId: items[0],
+                            updateModel: {...this.selectedModel}
+                        });
+                    } else {
+                        this.globalNet.updateItem(item, {...this.selectedModel});
+                    }
+                    this.selectedModel = {...item.getModel()};
+                } else {
+                    this.$message.warning("未选中任何模块")
+                }
+            }).catch(() => {
+            
+            })
+        },
+        onItemCfgCancel() {
+            this.showDetail = false;
+        },
         loadData() {
             console.log('loading data')
             setTimeout(() => {
@@ -201,6 +275,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/deep/ .el-drawer__body {
+    padding: 20px;
+    overflow: auto;
+    min-height: 100px;
+    position: relative;
+    
+    .btn {
+        position: absolute;
+        bottom: 30px;
+        left: 50px;
+    }
+}
+
 .app-main {
     /* 50= navbar  50  */
     min-height: calc(100vh - 50px);
