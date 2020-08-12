@@ -7,11 +7,13 @@
                     <span v-if="sidebar.opened">基础控件</span>
                 </template>
                 <el-tree empty-text="" :data="tree">
-                <span class="custom-tree-node" slot-scope="{ node }">
-                     <img alt="" data-item="{type:'tk-node',size:'80*40',label:'aaa'}"
-                          :src="require('../../assets/logo.png')" style="width:24px;height:24px"/>
-                     <span>{{ node.label }}</span>
-                </span>
+                    <div class="custom-tree-node" draggable="true" slot-scope="{ node,data }"
+                         :data-item="JSON.stringify({type:'tk-node',size:'80*40',label:'Model_'+data.val})">
+                        <el-tooltip :content="node.label" placement="right" effect="light">
+                            <fa-icon style="margin-left: 12px;color:#2bf" icon-class="fa-cube"/>
+                        </el-tooltip>
+                        <span v-if="sidebar.opened">{{ node.label }}</span>
+                    </div>
                 </el-tree>
             </el-collapse-item>
             <el-collapse-item>
@@ -58,9 +60,9 @@ export default {
     },
     methods: {
         queryData() {
-            this.tree = [{label: 'aaa', val: 1}, {label: 'aaa', val: 1}, {label: 'aaa', val: 1}, {
-                label: 'aaa',
-                val: 1
+            this.tree = [{label: 'Model_1', val: 1}, {label: 'Model_2', val: 2}, {label: 'Model_3', val: 3}, {
+                label: 'Model_4',
+                val: 4
             }]
             console.log("initialize items panel")
             this.$nextTick(() => {
@@ -81,6 +83,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+/deep/ .is-leaf {
+    display: none;
+}
 
 .custom-tree-node {
     flex: 1;
@@ -89,23 +94,7 @@ export default {
     justify-content: left;
     font-size: 14px;
     
-    /deep/ .ins {
-        background: transparent;
-        border: none;
-        height: 25px;
-        max-width: 170px;
-        padding-left: 0;
-        overflow: hidden;
-    }
     
-    /deep/ .dbBtn {
-        width: 60px;
-        padding-right: 22px;
-    }
-    
-    /deep/ .fac {
-        margin-right: 5px;
-    }
 }
 
 </style>
