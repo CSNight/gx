@@ -21,7 +21,7 @@ class AddItemPanel {
     initPlugin(graph) {
         const parentNode = this.get('container');
         const ghost = createDom('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"' + ' style="opacity:0" alt=""/>');
-        const children = parentNode.querySelectorAll('img[data-item]');
+        const children = parentNode.querySelectorAll('div[data-item]');
         each(children, (child) => {
             const addModel = (new Function("return " + child.getAttribute('data-item')))();
             child.addEventListener('dragstart', e => {
