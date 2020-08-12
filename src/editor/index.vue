@@ -1,23 +1,23 @@
 <template>
     <div :class="classObj" class="app-wrapper">
         <context-menu ref="contextMenu"/>
-        <div class="sidebar-container" :class="{'has-logo':showLogo}">
-            <div v-if="showLogo" class="sidebar-logo-container" :class="{'collapse':isCollapse}">
+        <div class="sidebar-container has-logo">
+            <div class="sidebar-logo-container" :class="{'collapse':isCollapse}">
                 <transition name="sidebarLogoFade">
-                    <div v-if="isCollapse" key="collapse" class="sidebar-logo-link">
+                    <div v-if="isCollapse" class="sidebar-logo-link">
                         <img v-if="logo" :src="logo" class="sidebar-logo" alt="">
-                        <h1 v-else class="sidebar-title">{{ title }} </h1>
+                        <h1 v-else class="sidebar-title">{{ title }}</h1>
                     </div>
-                    <div v-else key="expand" class="sidebar-logo-link">
+                    <div v-else class="sidebar-logo-link">
                         <img v-if="logo" :src="logo" class="sidebar-logo" alt="">
-                        <h1 class="sidebar-title">{{ title }} </h1>
+                        <h1 class="sidebar-title">{{ title }}</h1>
                     </div>
                 </transition>
             </div>
-            <item-panel ref="sidebar" :nodes="nodeShapes" @loadData="loadData"/>
+            <item-panel ref="sidebar" :nodes="nodeShapes" :show-label="!isCollapse" @init="initItemPanel"/>
         </div>
         <div class="main-container">
-            <navbar ref="topBar"/>
+            <ToolbarPanel ref="topBar" :side-bar.sync="sidebar" @toggleSide="toggleSideBar"/>
             <section class="app-main">
                 <div id="flowChart" style="position: relative;box-shadow: 0 0 10px 4px rgba(0,0,0,0.1)"></div>
             </section>
@@ -32,7 +32,6 @@
                     <el-button size="mini" type="primary" @click="onItemCfgChange">Save</el-button>
                     <el-button size="mini" @click="onItemCfgCancel">Cancel</el-button>
                 </div>
-            
             </el-drawer>
         </div>
     </div>
@@ -40,9 +39,8 @@
 
 <script>
 import ItemPanel from './sider/ItemPanel'
-import Navbar from "./toolbar/Navbar";
+import ToolbarPanel from "./toolbar/ToolbarPanel";
 import ContextMenu from "./context/ContextMenu";
-import {mapMutations} from "vuex";
 import G6 from '@antv/g6/lib';
 import registerBehavior from '@/components/behavior'
 import registerShape from '@/components/shape'
@@ -52,6 +50,7 @@ import ContextMenuPlugin from "@/components/plugins/ContextMenu";
 import EditorWrapper from "@/components/plugins/EditorWrapper";
 import ToolBar from "@/components/plugins/ToolBar";
 import {EdgeTooltip, NodeTooltip} from "@/components/behavior/tooltip";
+import AddItemPanel from "@/components/plugins/AddItemPanel";
 
 export default {
     name: "Index",
@@ -59,57 +58,30 @@ export default {
         return {
             title: 'GraphX',
             logo: require('../assets/logo.png'),
+            sidebar: true,
             globalNet: null,
-            nodeShapes: [],
             selectedModel: null,
             detailUpdate: false,
-            initData: {
-                // 点集
-                nodes: [{
-                    id: 'node1', // 节点的唯一标识
-                    type: 'tk-node',
-                    x: 100,      // 节点横坐标
-                    y: 200,      // 节点纵坐标
-                    label: '起始点', // 节点文本
-                    meta: {a: '111'}
-                }, {
-                    id: 'node2',
-                    type: 'tk-node',
-                    x: 300,
-                    y: 200,
-                    label: '目标点'
-                }],
-                // 边集
-                edges: [
-                    // // 表示一条从 node1 节点连接到 node2 节点的边
-                    {
-                        source: 'node1',  // 起始点 id
-                        target: 'node2',  // 目标点 id
-                        label: '我是连线',   // 边的文本
-                        type: 'flow-poly-round'
-                    }
-                ]
-            }
+            initialized: false,
+        }
+    },
+    components: {ContextMenu, ToolbarPanel, ItemPanel},
+    props: {
+        nodeShapes: {
+            type: Array,
+            required: true
+        },
+        modelData: {
+            type: Object,
+            required: true
         }
     },
     created() {
         this.$nextTick(() => {
-            this.nodeShapes.push(1)
+            this.init();
         })
     },
-    components: {
-        ContextMenu,
-        Navbar,
-        ItemPanel,
-    },
     watch: {
-        nodeShapes: {
-            handler: function (val) {
-                if (val && val.length > 0) {
-                    this.init();
-                }
-            }
-        },
         detailUpdate: {
             handler: function (val) {
                 if (val) {
@@ -119,12 +91,17 @@ export default {
                     this.onItemCfgCancel();
                 }
             }
+        },
+        modelData: {
+            handler: function (val) {
+                console.log("data change")
+                if (val && this.initialized) {
+                    this.globalNet.changeData(JSON.parse(JSON.stringify(val)));
+                }
+            },
         }
     },
     computed: {
-        sidebar() {
-            return this.$store.state.app.sidebar
-        },
         showDetail: {
             get: function () {
                 return this.selectedModel != null;
@@ -137,16 +114,13 @@ export default {
         },
         classObj() {
             return {
-                hideSidebar: !this.sidebar.opened,
-                openSidebar: this.sidebar.opened,
-                withoutAnimation: this.sidebar.withoutAnimation
+                hideSidebar: !this.sidebar,
+                openSidebar: this.sidebar,
+                withoutAnimation: true
             }
         },
-        showLogo() {
-            return true
-        },
         isCollapse() {
-            return !this.sidebar.opened
+            return !this.sidebar
         },
         containerWidth: () => {
             return document.querySelector('.app-main').offsetWidth - 100
@@ -156,7 +130,6 @@ export default {
         },
     },
     methods: {
-        ...mapMutations('app', ['SET_GRAPH']),
         init() {
             console.log('initializing graph editor')
             registerBehavior(G6);
@@ -182,8 +155,7 @@ export default {
             window.addEventListener("resize", () => {
                 this.resizeFunc(this)
             });
-            this.initEvent()
-            this.SET_GRAPH(this.globalNet)
+            this.initEvent();
         },
         initPlugins() {
             console.log('initializing graph plugins')
@@ -195,10 +167,21 @@ export default {
                 contextCom: this.$refs.contextMenu
             });
             const toolbar = new ToolBar({
-                container: this.$refs.topBar.$refs.toolPanel.$el,
-                toolbarCom: this.$refs.topBar.$refs.toolPanel
+                container: this.$refs.topBar.$el,
+                toolbarCom: this.$refs.topBar
             });
             return [grid, editorWrapper, command, toolbar, contextMenu]
+        },
+        initItemPanel() {
+            const addItem = new AddItemPanel({
+                container: this.$refs.sidebar.$el,
+                itemsCom: this.$refs.sidebar
+            });
+            this.globalNet.addPlugin(addItem);
+            this.initialized = true;
+            if (this.modelData) {
+                this.globalNet.changeData(JSON.parse(JSON.stringify(this.modelData)));
+            }
         },
         initBrushBehavior() {
             return {
@@ -252,22 +235,21 @@ export default {
                     this.$message.warning("未选中任何模块")
                 }
             }).catch(() => {
-            
+
             })
         },
         onItemCfgCancel() {
             this.showDetail = false;
         },
-        loadData() {
-            console.log('loading data')
-            setTimeout(() => {
-                this.globalNet.changeData(this.initData);
-            }, 3000);
-            this.$emit('loadData', this.globalNet)
-        },
         resizeFunc() {
             this.globalNet.changeSize(document.querySelector('.app-main').offsetWidth - 100, document.querySelector('.app-main').offsetHeight - 100);
-        }
+        },
+        toggleSideBar() {
+            this.sidebar = !this.sidebar
+            setTimeout(() => {
+                this.resizeFunc()
+            }, 200)
+        },
     }, beforeDestroy() {
         window.removeEventListener("resize", this.resizeFunc);
     }
@@ -280,7 +262,7 @@ export default {
     overflow: auto;
     min-height: 100px;
     position: relative;
-    
+
     .btn {
         position: absolute;
         bottom: 30px;
@@ -320,18 +302,18 @@ export default {
     background: #233657;
     text-align: center;
     overflow: hidden;
-    
+
     & .sidebar-logo-link {
         height: 100%;
         width: 100%;
-        
+
         & .sidebar-logo {
             width: 32px;
             height: 32px;
             vertical-align: middle;
             margin-right: 12px;
         }
-        
+
         & .sidebar-title {
             display: inline-block;
             margin: 0;
@@ -343,7 +325,7 @@ export default {
             vertical-align: middle;
         }
     }
-    
+
     &.collapse {
         .sidebar-logo {
             margin-right: 0;
