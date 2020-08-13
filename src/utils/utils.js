@@ -18,10 +18,6 @@ export function dateFormat(fmt, date) {
     return fmt;
 }
 
-export function isExternal(path) {
-    return /^(https?:|mailto:|tel:)/.test(path)
-}
-
 export function guid() {
     /**
      * @return {string}

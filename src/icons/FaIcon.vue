@@ -1,10 +1,8 @@
 <template>
-    <div v-if="isExternal" :style="styleExternalIcon" class="svg-external-icon svg-icon" v-on="$listeners"></div>
-    <i v-else :class="iconName+' fa-icon'"/>
+    <i :class="iconName+' fa-icon'"/>
 </template>
 
 <script>
-import {isExternal} from '@/utils/utils'
 
 export default {
     name: 'FaIcon',
@@ -19,20 +17,11 @@ export default {
         }
     },
     computed: {
-        isExternal() {
-            return isExternal(this.iconClass)
-        },
         iconName() {
             if (!this.className || this.className === '') {
                 return `fa ${this.iconClass}`
             } else {
                 return `fa ${this.className} ${this.iconClass}`
-            }
-        },
-        styleExternalIcon() {
-            return {
-                mask: `url(${this.iconClass}) no-repeat 50% 50%`,
-                '-webkit-mask': `url(${this.iconClass}) no-repeat 50% 50%`
             }
         }
     }
@@ -47,11 +36,5 @@ export default {
     fill: currentColor;
     overflow: hidden;
     text-align: center;
-}
-
-.svg-external-icon {
-    background-color: currentColor;
-    mask-size: cover !important;
-    display: inline-block;
 }
 </style>

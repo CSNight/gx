@@ -10,17 +10,17 @@
                     <div class="custom-tree-node" draggable="true" slot-scope="{ node,data }"
                          :data-item="JSON.stringify({type:'tk-node',size:'80*40',label:'Model_'+data.val})">
                         <el-tooltip :content="node.label" placement="right" effect="light">
-                            <svg-icon style="margin-left: 12px;color:#2bf" icon-class="console"/>
+                            <fa-icon style="margin-left: 12px;color:#2bf" icon-class="fa fa-cube"/>
                         </el-tooltip>
                         <span v-if="showLabel">{{ node.label }}</span>
                     </div>
                 </el-tree>
             </el-collapse-item>
             <el-collapse-item>
-            
+
             </el-collapse-item>
             <el-collapse-item>
-            
+
             </el-collapse-item>
         </el-collapse>
     </el-scrollbar>
@@ -91,8 +91,6 @@ export default {
     align-items: center;
     justify-content: left;
     font-size: 14px;
-    
-    
 }
 
 </style>
