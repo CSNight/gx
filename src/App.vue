@@ -13,7 +13,7 @@
                         <el-input readonly v-model="slotProps.detail.type"/>
                     </el-form-item>
                     <el-form-item>
-
+                    
                     </el-form-item>
                 </el-form>
             </template>
@@ -61,8 +61,8 @@ export default {
                     }
                 ]
             }
-        },100);
-
+        }, 100);
+        
     }
 }
 </script>

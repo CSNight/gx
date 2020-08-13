@@ -10,7 +10,7 @@
                     <div class="custom-tree-node" draggable="true" slot-scope="{ node,data }"
                          :data-item="JSON.stringify({type:'tk-node',size:'80*40',label:'Model_'+data.val})">
                         <el-tooltip :content="node.label" placement="right" effect="light">
-                            <fa-icon style="margin-left: 12px;color:#2bf" icon-class="fa-cube"/>
+                            <svg-icon style="margin-left: 12px;color:#2bf" icon-class="console"/>
                         </el-tooltip>
                         <span v-if="showLabel">{{ node.label }}</span>
                     </div>
