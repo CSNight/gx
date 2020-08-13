@@ -3,17 +3,8 @@
         <layout ref="editor" :model-data="modelData" :node-shapes="nodeShapes">
             <template v-slot:default="slotProps">
                 <el-form size="mini" label-width="90px">
-                    <el-form-item label="模块ID">
+                    <el-form-item label="模块信息">
                         <el-input readonly v-model="slotProps.detail.id"/>
-                    </el-form-item>
-                    <el-form-item label="模块名">
-                        <el-input v-model="slotProps.detail.label"/>
-                    </el-form-item>
-                    <el-form-item label="模块类型">
-                        <el-input readonly v-model="slotProps.detail.type"/>
-                    </el-form-item>
-                    <el-form-item>
-                    
                     </el-form-item>
                 </el-form>
             </template>

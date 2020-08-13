@@ -27,6 +27,46 @@
                 size="25%"
                 :visible.sync="showDetail"
                 direction="rtl" @save="onItemCfgChange" @cancel="onItemCfgCancel">
+                <el-form size="mini" label-width="90px">
+                    <el-form-item label="模块ID">
+                        <el-input readonly v-model="selectedModel.id" style="width: 100%"/>
+                    </el-form-item>
+                    <el-form-item label="模块名">
+                        <el-input v-model="selectedModel.label"/>
+                    </el-form-item>
+                    <el-form-item label="模块类型">
+                        <el-input style="width: 100%" v-if="selectedModel.shapeClazz==='node'" readonly
+                                  v-model="selectedModel.type"/>
+                        <el-select style="width: 100%" v-else v-model="selectedModel.type">
+                            <el-option v-for="item in edgeFactory" :key="item.name"
+                                       :value="item.name"
+                                       :label="item.label"/>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="样式">
+                        <el-row style="margin-bottom: 10px">
+                            <el-col :span="12" v-if="selectedModel.shapeClazz==='node'"
+                                    style="display: flex;align-items: center;">
+                                填充颜色：
+                                <el-color-picker show-alpha v-model="selectedItemStyle.fill"/>
+                            </el-col>
+                            <el-col :span="12" style="display: flex;align-items: center">
+                                线颜色：
+                                <el-color-picker show-alpha v-model="selectedItemStyle.stroke"/>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12" style="display: flex;align-items: center">
+                                线宽：
+                                <el-input-number v-model="selectedItemStyle.lineWidth"/>
+                            </el-col>
+                            <el-col :span="12" style="display: flex;align-items: center">
+                                阴影：
+                                <el-input-number v-model="selectedItemStyle.shadowBlur"/>
+                            </el-col>
+                        </el-row>
+                    </el-form-item>
+                </el-form>
                 <slot v-bind="{detail:selectedModel}"></slot>
                 <div class="btn">
                     <el-button size="mini" type="primary" @click="onItemCfgChange">Save</el-button>
@@ -64,6 +104,9 @@ export default {
             selectedModel: null,
             detailUpdate: false,
             initialized: false,
+            selectedItemStyle: null,
+            edgeFactory: [],
+            nodeFactory: []
         }
     },
     components: {ContextMenu, ToolbarPanel, ItemPanel},
@@ -98,6 +141,13 @@ export default {
                 console.log("data change")
                 if (val && this.initialized) {
                     this.globalNet.changeData(clone(val));
+                }
+            }
+        },
+        nodeShapes: {
+            handler: function (val) {
+                if (val && val.length > 0) {
+                    this.updateShapeFactory();
                 }
             }
         }
@@ -224,9 +274,12 @@ export default {
             this.globalNet.on('editDetail', (items) => {
                 if (items && items.length > 0) {
                     let item = this.globalNet.findById(items[0]);
-                    this.selectedModel = deepMix({}, {...item.getModel()});
+                    this.selectedModel = deepMix({shapeClazz: item.get('type')}, {...item.getModel()});
+                    this.selectedItemStyle = deepMix({}, item.get('originStyle'));
+                    console.log(this.selectedItemStyle)
                 } else {
                     this.selectedModel = null;
+                    this.selectedItemStyle = null;
                 }
             });
         },
@@ -252,11 +305,23 @@ export default {
                     this.$message.warning("未选中任何模块")
                 }
             }).catch(() => {
-            
+
             })
         },
         onItemCfgCancel() {
             this.showDetail = false;
+        },
+        updateShapeFactory() {
+            this.edgeFactory = [];
+            this.nodeFactory = [];
+            for (let i = 0; i < this.nodeShapes.length; i++) {
+                let shapeDef = this.nodeShapes[i];
+                if (shapeDef.shapeType === 'node') {
+                    this.nodeFactory.push(shapeDef)
+                } else if (shapeDef.shapeType === 'edge') {
+                    this.edgeFactory.push(shapeDef)
+                }
+            }
         },
         resizeFunc() {
             this.globalNet.changeSize(document.querySelector('.app-main').offsetWidth - 100, document.querySelector('.app-main').offsetHeight - 100);
@@ -279,7 +344,7 @@ export default {
     overflow: auto;
     min-height: 100px;
     position: relative;
-    
+
     .btn {
         position: absolute;
         bottom: 30px;
@@ -319,18 +384,18 @@ export default {
     background: #233657;
     text-align: center;
     overflow: hidden;
-    
+
     & .sidebar-logo-link {
         height: 100%;
         width: 100%;
-        
+
         & .sidebar-logo {
             width: 32px;
             height: 32px;
             vertical-align: middle;
             margin-right: 12px;
         }
-        
+
         & .sidebar-title {
             display: inline-block;
             margin: 0;
@@ -342,7 +407,7 @@ export default {
             vertical-align: middle;
         }
     }
-    
+
     &.collapse {
         .sidebar-logo {
             margin-right: 0;
