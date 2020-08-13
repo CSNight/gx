@@ -42,7 +42,7 @@ import ItemPanel from './sider/ItemPanel'
 import ToolbarPanel from "./toolbar/ToolbarPanel";
 import ContextMenu from "./context/ContextMenu";
 import G6 from '@antv/g6/lib';
-import {clone, each} from '@antv/util';
+import {clone, deepMix, each} from '@antv/util';
 import registerBehavior from '@/components/behavior'
 import registerShape from '@/components/shape'
 import Grid from "@antv/g6/lib/plugins/grid";
@@ -174,6 +174,7 @@ export default {
             return [grid, editorWrapper, command, toolbar, contextMenu]
         },
         initItemPanel() {
+            console.log("initialize items plugins and shapes")
             const parentNode = this.$refs.sidebar.$el;
             const ghost = createDom('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"' + ' style="opacity:0" alt=""/>');
             const children = parentNode.querySelectorAll('div[data-item]');
@@ -223,7 +224,7 @@ export default {
             this.globalNet.on('editDetail', (items) => {
                 if (items && items.length > 0) {
                     let item = this.globalNet.findById(items[0]);
-                    this.selectedModel = {...item.getModel()};
+                    this.selectedModel = deepMix({}, {...item.getModel()});
                 } else {
                     this.selectedModel = null;
                 }
@@ -251,7 +252,7 @@ export default {
                     this.$message.warning("未选中任何模块")
                 }
             }).catch(() => {
-
+            
             })
         },
         onItemCfgCancel() {
@@ -278,7 +279,7 @@ export default {
     overflow: auto;
     min-height: 100px;
     position: relative;
-
+    
     .btn {
         position: absolute;
         bottom: 30px;
@@ -318,18 +319,18 @@ export default {
     background: #233657;
     text-align: center;
     overflow: hidden;
-
+    
     & .sidebar-logo-link {
         height: 100%;
         width: 100%;
-
+        
         & .sidebar-logo {
             width: 32px;
             height: 32px;
             vertical-align: middle;
             margin-right: 12px;
         }
-
+        
         & .sidebar-title {
             display: inline-block;
             margin: 0;
@@ -341,7 +342,7 @@ export default {
             vertical-align: middle;
         }
     }
-
+    
     &.collapse {
         .sidebar-logo {
             margin-right: 0;

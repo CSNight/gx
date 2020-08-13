@@ -1,4 +1,4 @@
-import {clone, isString, mix} from '@antv/util';
+import {clone, deepMix, isString, mix} from '@antv/util';
 import {guid2} from "@/utils/utils";
 
 class Command {
@@ -118,17 +118,21 @@ class Command {
                 const item = graph.findById(this.itemId);
                 if (item) {
                     if (!this.originModel && this.executeTimes === 1) {
-                        this.originModel = mix({}, item.getModel());
+                        this.originModel = deepMix({}, item.getModel());
                     }
-                    graph.update(item, this.updateModel);
+                    graph.updateItem(item, this.updateModel);
                 }
             },
             back: function (graph) {
                 const item = graph.findById(this.itemId);
                 if (item) {
+                    for (let key in item.getModel().style) {
+                        if (item.getModel().style[key] && !this.originModel.style[key]) {
+                            item.getModel().style[key] = item.get('shapeFactory')[item.getModel().type].options.style[key]
+                        }
+                    }
                     graph.update(item, this.originModel);
                 }
-
             },
         });
         cmdPlugin.registerCommand('delete', {

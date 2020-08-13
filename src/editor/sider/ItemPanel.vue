@@ -17,10 +17,10 @@
                 </el-tree>
             </el-collapse-item>
             <el-collapse-item>
-
+            
             </el-collapse-item>
             <el-collapse-item>
-
+            
             </el-collapse-item>
         </el-collapse>
     </el-scrollbar>
@@ -72,9 +72,8 @@ export default {
             }]
             console.log("initialize items panel")
             //TODO register Shape From Database
-            registerFlowNode(G6);
+            registerFlowNode(G6, this.tree);
             this.$nextTick(() => {
-                console.log("initialize items plugins and shapes")
                 this.$emit('init', {})
             })
         },
@@ -92,8 +91,8 @@ export default {
     align-items: center;
     justify-content: left;
     font-size: 14px;
-
-
+    
+    
 }
 
 </style>

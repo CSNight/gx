@@ -140,7 +140,7 @@ const nodeDefinition = {
             if (value) {
                 rect.attr('fill', this.options.stateStyles.selected.fill);
             } else {
-                rect.attr('fill', this.options.style.fill);
+                rect.attr('fill', item.get('model').style.fill || this.options.style.fill);
             }
         } else if (name === 'hover') {
             const rect = group.getChildByIndex(0);

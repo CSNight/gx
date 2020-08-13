@@ -25,8 +25,8 @@ const taskDefaultOptions = {
 };
 
 
-export default function (G6) {
-    for (let i = 0; i < 1; i++) {
+export default function (G6, nodeShapes) {
+    for (let i = 0; i<nodeShapes.length; i++) {
         G6.registerNode('tk-node', {
             shapeType: 'rect',
             options: {...taskDefaultOptions},
