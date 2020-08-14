@@ -27,47 +27,48 @@
                 size="25%"
                 :visible.sync="showDetail"
                 direction="rtl" @save="onItemCfgChange" @cancel="onItemCfgCancel">
-                <el-form size="mini" label-width="90px">
-                    <el-form-item label="模块ID">
-                        <el-input readonly v-model="selectedModel.id" style="width: 100%"/>
-                    </el-form-item>
-                    <el-form-item label="模块名">
-                        <el-input v-model="selectedModel.label"/>
-                    </el-form-item>
-                    <el-form-item label="模块类型">
-                        <el-input style="width: 100%" v-if="selectedModel.shapeClazz==='node'" readonly
-                                  v-model="selectedModel.type"/>
-                        <el-select style="width: 100%" v-else v-model="selectedModel.type">
-                            <el-option v-for="item in edgeFactory" :key="item.name"
-                                       :value="item.name"
-                                       :label="item.label"/>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="样式">
-                        <el-row style="margin-bottom: 10px">
-                            <el-col :span="12" v-if="selectedModel.shapeClazz==='node'"
-                                    style="display: flex;align-items: center;">
-                                填充颜色：
-                                <el-color-picker show-alpha v-model="selectedItemStyle.fill"/>
-                            </el-col>
-                            <el-col :span="12" style="display: flex;align-items: center">
-                                线颜色：
-                                <el-color-picker show-alpha v-model="selectedItemStyle.stroke"/>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12" style="display: flex;align-items: center">
-                                线宽：
-                                <el-input-number v-model="selectedItemStyle.lineWidth"/>
-                            </el-col>
-                            <el-col :span="12" style="display: flex;align-items: center">
-                                阴影：
-                                <el-input-number v-model="selectedItemStyle.shadowBlur"/>
-                            </el-col>
-                        </el-row>
-                    </el-form-item>
-                </el-form>
-                <slot v-bind="{detail:selectedModel}"></slot>
+                <div style="height:90%;overflow:auto;padding: 20px;">
+                    <el-form size="mini" label-width="90px">
+                        <el-form-item label="模块ID">
+                            <el-input readonly v-model="selectedModel.id" style="width: 100%"/>
+                        </el-form-item>
+                        <el-form-item label="模块名">
+                            <el-input v-model="selectedModel.label"/>
+                        </el-form-item>
+                        <el-form-item label="模块类型">
+                            <el-input style="width: 100%" v-if="selectedModel.shapeClazz==='node'" readonly
+                                      v-model="selectedModel.type"/>
+                            <el-select style="width: 100%" v-else v-model="selectedModel.type">
+                                <el-option v-for="item in edgeFactory" :key="item.name"
+                                           :value="item.name" :label="item.label"/>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="样式">
+                            <el-row style="margin-bottom: 10px">
+                                <el-col :span="12" v-if="selectedModel.shapeClazz==='node'"
+                                        style="display: flex;align-items: center;">
+                                    填充颜色：
+                                    <color-picker v-model="selectedItemStyle" type="fill"/>
+                                </el-col>
+                                <el-col :span="12" style="display: flex;align-items: center">
+                                    线颜色：
+                                    <color-picker v-model="selectedItemStyle" type="stroke"/>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12" style="display: flex;align-items: center">
+                                    线宽：
+                                    <el-input-number :min="1" :max="10" v-model="selectedItemStyle.lineWidth"/>
+                                </el-col>
+                                <el-col :span="12" style="display: flex;align-items: center">
+                                    阴影：
+                                    <el-input-number :min="0" :max="10" v-model="selectedItemStyle.shadowBlur"/>
+                                </el-col>
+                            </el-row>
+                        </el-form-item>
+                    </el-form>
+                    <slot v-bind="{detail:selectedModel}"></slot>
+                </div>
                 <div class="btn">
                     <el-button size="mini" type="primary" @click="onItemCfgChange">Save</el-button>
                     <el-button size="mini" @click="onItemCfgCancel">Cancel</el-button>
@@ -81,6 +82,7 @@
 import ItemPanel from './sider/ItemPanel'
 import ToolbarPanel from "./toolbar/ToolbarPanel";
 import ContextMenu from "./context/ContextMenu";
+import ColorPicker from "../editor/components/ColorPicker";
 import G6 from '@antv/g6/lib';
 import {clone, deepMix, each} from '@antv/util';
 import registerBehavior from './lib/behavior'
@@ -92,6 +94,7 @@ import EditorWrapper from "./lib/plugins/EditorWrapper";
 import ToolBar from "./lib/plugins/ToolBar";
 import {EdgeTooltip, NodeTooltip} from "./lib/behavior/tooltip";
 import {createDom} from "@antv/dom-util";
+import {objDiff} from "../editor/utils/utils";
 
 export default {
     name: "Index",
@@ -109,7 +112,7 @@ export default {
             nodeFactory: []
         }
     },
-    components: {ContextMenu, ToolbarPanel, ItemPanel},
+    components: {ContextMenu, ToolbarPanel, ItemPanel, ColorPicker},
     props: {
         nodeShapes: {
             type: Array,
@@ -276,7 +279,6 @@ export default {
                     let item = this.globalNet.findById(items[0]);
                     this.selectedModel = deepMix({shapeClazz: item.get('type')}, {...item.getModel()});
                     this.selectedItemStyle = deepMix({}, item.get('originStyle'));
-                    console.log(this.selectedItemStyle)
                 } else {
                     this.selectedModel = null;
                     this.selectedItemStyle = null;
@@ -292,6 +294,7 @@ export default {
                 const items = this.globalNet.get('selectedItems');
                 if (items && items.length > 0) {
                     let item = this.globalNet.findById(items[0]);
+                    this.checkStyleChange();
                     if (this.globalNet.executeCommand) {
                         this.globalNet.executeCommand('update', {
                             itemId: items[0],
@@ -310,6 +313,19 @@ export default {
         },
         onItemCfgCancel() {
             this.showDetail = false;
+        },
+        checkStyleChange() {
+            if (this.selectedModel && this.selectedItemStyle) {
+                let item = this.globalNet.findById(this.selectedModel.id);
+                if (item) {
+                    let originStyle = item.get('originStyle')
+                    let diff = {};
+                    objDiff(this.selectedItemStyle, originStyle, diff)
+                    if (diff && Object.keys(diff).length > 0) {
+                        this.selectedModel.style = {...diff}
+                    }
+                }
+            }
         },
         updateShapeFactory() {
             this.edgeFactory = [];
@@ -340,7 +356,6 @@ export default {
 
 <style lang="scss" scoped>
 /deep/ .el-drawer__body {
-    padding: 20px;
     overflow: auto;
     min-height: 100px;
     position: relative;
