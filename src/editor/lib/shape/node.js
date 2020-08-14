@@ -26,7 +26,9 @@ const nodeDefinition = {
         },
         style: {
             fill: '#f9f9f9',
+            fillOpacity:1,
             stroke: '#bbb',
+            strokeOpacity:1,
             cursor: 'default',
         },
         stateStyles: {
