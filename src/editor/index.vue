@@ -338,7 +338,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 /deep/ .el-drawer__body {
     padding: 20px;
     overflow: auto;
