@@ -31,6 +31,35 @@ export function guid() {
         + S4() + S4() + S4());
 }
 
+export function objDiff(ob1, ob2, res) {
+    for (let key in ob1) {
+        let diff = false;
+        let val1 = ob1[key]
+        if (val1 || ob2[key]) {
+            if (val1 instanceof Object) {
+                let ch = objDiff(val1, ob2[key], {});
+                if (Object.keys(ch).length > 0) {
+                    res[key] = ch;
+                }
+            } else {
+                if (key === 'fill' || key === 'stroke') {
+                    diff = val1.toUpperCase() !== ob2[key].toUpperCase()
+                } else {
+                    diff = val1 !== ob2[key]
+                }
+            }
+        } else if (!val1 && !ob2[key]) {
+            diff = false
+        } else {
+            diff = true;
+        }
+        if (diff) {
+            res[key] = val1;
+        }
+    }
+    return res;
+}
+
 export function guid2() {
     /**
      * @return {string}
