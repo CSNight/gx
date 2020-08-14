@@ -128,7 +128,9 @@ class Command {
                 if (item) {
                     for (let key in item.getModel().style) {
                         if (item.getModel().style[key] && !this.originModel.style[key]) {
-                            item.getModel().style[key] = item.get('shapeFactory')[item.getModel().type].options.style[key]
+                            if (item.get('shapeFactory')[item.getModel().type].options.style[key]) {
+                                item.getModel().style[key] = item.get('shapeFactory')[item.getModel().type].options.style[key]
+                            }
                         }
                     }
                     graph.update(item, this.originModel);
