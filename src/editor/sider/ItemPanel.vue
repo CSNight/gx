@@ -17,10 +17,10 @@
                 </el-tree>
             </el-collapse-item>
             <el-collapse-item>
-
+            
             </el-collapse-item>
             <el-collapse-item>
-
+            
             </el-collapse-item>
         </el-collapse>
     </el-scrollbar>
@@ -28,7 +28,7 @@
 
 <script>
 
-import registerFlowNode from "../../components/shape/flowNode";
+import registerFlowNode from "../lib/shape/flowNode";
 import G6 from "@antv/g6/lib";
 
 export default {
@@ -92,5 +92,39 @@ export default {
     justify-content: left;
     font-size: 14px;
 }
+
+
+.sidebar-container {
+    .fa-icon {
+        margin-right: 4px;
+    }
+    
+    .svg-icon {
+        margin-right: 16px;
+        margin-left: 8px;
+    }
+    
+    .el-icon {
+        margin-right: 4px;
+    }
+}
+
+.hideSidebar {
+    .sidebar-container {
+        .fa-icon {
+            margin-right: 4px;
+        }
+        
+        .svg-icon {
+            margin-right: 4px;
+            margin-left: 8px;
+        }
+        
+        .el-icon {
+            margin-right: 4px;
+        }
+    }
+}
+
 
 </style>

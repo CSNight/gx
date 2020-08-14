@@ -18,7 +18,7 @@
         </div>
         <div class="main-container">
             <ToolbarPanel ref="topBar" :side-bar.sync="sidebar" @toggleSide="toggleSideBar"/>
-            <section class="app-main">
+            <section class="editor-main">
                 <div id="flowChart" style="position: relative;box-shadow: 0 0 10px 4px rgba(0,0,0,0.1)"></div>
             </section>
             <el-drawer
@@ -83,14 +83,14 @@ import ToolbarPanel from "./toolbar/ToolbarPanel";
 import ContextMenu from "./context/ContextMenu";
 import G6 from '@antv/g6/lib';
 import {clone, deepMix, each} from '@antv/util';
-import registerBehavior from '../components/behavior'
-import registerShape from '../components/shape'
+import registerBehavior from './lib/behavior'
+import registerShape from './lib/shape'
 import Grid from "@antv/g6/lib/plugins/grid";
-import Command from "../components/plugins/Command";
-import ContextMenuPlugin from "../components/plugins/ContextMenu";
-import EditorWrapper from "../components/plugins/EditorWrapper";
-import ToolBar from "../components/plugins/ToolBar";
-import {EdgeTooltip, NodeTooltip} from "../components/behavior/tooltip";
+import Command from "./lib/plugins/Command";
+import ContextMenuPlugin from "./lib/plugins/ContextMenu";
+import EditorWrapper from "./lib/plugins/EditorWrapper";
+import ToolBar from "./lib/plugins/ToolBar";
+import {EdgeTooltip, NodeTooltip} from "./lib/behavior/tooltip";
 import {createDom} from "@antv/dom-util";
 
 export default {
@@ -167,17 +167,17 @@ export default {
             return {
                 hideSidebar: !this.sidebar,
                 openSidebar: this.sidebar,
-                withoutAnimation: true
+                withoutAnimation: false
             }
         },
         isCollapse() {
             return !this.sidebar
         },
         containerWidth: () => {
-            return document.querySelector('.app-main').offsetWidth - 100
+            return document.querySelector('.editor-main').offsetWidth - 100
         },
         containerHeight: () => {
-            return document.querySelector('.app-main').offsetHeight - 100
+            return document.querySelector('.editor-main').offsetHeight - 100
         },
     },
     methods: {
@@ -305,7 +305,7 @@ export default {
                     this.$message.warning("未选中任何模块")
                 }
             }).catch(() => {
-
+            
             })
         },
         onItemCfgCancel() {
@@ -324,7 +324,7 @@ export default {
             }
         },
         resizeFunc() {
-            this.globalNet.changeSize(document.querySelector('.app-main').offsetWidth - 100, document.querySelector('.app-main').offsetHeight - 100);
+            this.globalNet.changeSize(document.querySelector('.editor-main').offsetWidth - 100, document.querySelector('.editor-main').offsetHeight - 100);
         },
         toggleSideBar() {
             this.sidebar = !this.sidebar
@@ -338,13 +338,13 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 /deep/ .el-drawer__body {
     padding: 20px;
     overflow: auto;
     min-height: 100px;
     position: relative;
-
+    
     .btn {
         position: absolute;
         bottom: 30px;
@@ -352,7 +352,79 @@ export default {
     }
 }
 
-.app-main {
+.main-container {
+    min-height: 100%;
+    transition: margin-left .28s;
+    margin-left: 210px;
+    position: relative;
+}
+
+.sidebar-container {
+    transition: width 0.28s;
+    width: 210px !important;
+    background-color: #fff;
+    border-right: 1px solid #ccc;
+    height: 100%;
+    position: fixed;
+    font-size: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1001;
+    overflow: hidden;
+    // reset element-ui css
+    .horizontal-collapse-transition {
+        transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out;
+    }
+    
+    .scrollbar-wrapper {
+        overflow-x: hidden !important;
+    }
+    
+    .el-scrollbar__bar.is-vertical {
+        right: 0;
+    }
+    
+    .el-scrollbar {
+        height: 100%;
+    }
+    
+    &.has-logo {
+        .el-scrollbar {
+            height: calc(100% - 50px);
+        }
+    }
+    
+    .is-horizontal {
+        display: none;
+    }
+    
+    a {
+        display: inline-block;
+        width: 100%;
+        overflow: hidden;
+    }
+}
+
+.hideSidebar {
+    .sidebar-container {
+        width: 50px !important;
+    }
+    
+    .main-container {
+        margin-left: 50px;
+    }
+}
+
+.withoutAnimation {
+    
+    .main-container,
+    .sidebar-container {
+        transition: none;
+    }
+}
+
+.editor-main {
     /* 50= navbar  50  */
     min-height: calc(100vh - 50px);
     width: 100%;
@@ -363,7 +435,7 @@ export default {
     justify-content: center;
 }
 
-.fixed-header + .app-main {
+.fixed-header + .editor-main {
     padding-top: 50px;
 }
 
@@ -384,18 +456,18 @@ export default {
     background: #233657;
     text-align: center;
     overflow: hidden;
-
+    
     & .sidebar-logo-link {
         height: 100%;
         width: 100%;
-
+        
         & .sidebar-logo {
             width: 32px;
             height: 32px;
             vertical-align: middle;
             margin-right: 12px;
         }
-
+        
         & .sidebar-title {
             display: inline-block;
             margin: 0;
@@ -407,7 +479,7 @@ export default {
             vertical-align: middle;
         }
     }
-
+    
     &.collapse {
         .sidebar-logo {
             margin-right: 0;
@@ -423,6 +495,36 @@ export default {
         padding-right: 15px;
     }
 }
+
+@mixin clearfix {
+    &:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+}
+
+.app-wrapper {
+    @include clearfix;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+}
+
+.fixed-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 9;
+    width: calc(100% - 210px);
+    transition: width 0.28s;
+}
+
+.hideSidebar .fixed-header {
+    width: calc(100% - 54px)
+}
+
 .svg-icon {
     width: 1em;
     height: 1em;
@@ -430,6 +532,7 @@ export default {
     fill: currentColor;
     overflow: hidden;
 }
+
 .fa-icon {
     width: 1.5em;
     height: 1em;
@@ -438,6 +541,8 @@ export default {
     overflow: hidden;
     text-align: center;
 }
+
+
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -447,8 +552,7 @@ export default {
     background-color: #ddd;
     border-radius: 3px;
 }
-</style>
-<style>
+
 .g6-component-tooltip {
     border: 1px solid #e2e2e2;
     border-radius: 4px;

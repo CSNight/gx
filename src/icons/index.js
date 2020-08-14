@@ -1,6 +1,6 @@
 import Vue from 'vue'
-import SygIcon from './SvgIcon'
-import FaIcon from "./FaIcon";
+import SygIcon from '../editor/components/SvgIcon'
+import FaIcon from "../editor/components/FaIcon";
 // svg component
 
 // register globally
