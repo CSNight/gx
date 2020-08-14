@@ -29,17 +29,15 @@ export default function (G6) {
             const path = group.getChildByIndex(0);
             if (name === 'selected') {
                 if (value) {
-                    path.attr('lineWidth', this.options.stateStyles.selected.lineWidth);
                     path.attr('stroke', this.options.stateStyles.selected.stroke);
                 } else {
-                    path.attr('lineWidth', this.options.style.lineWidth);
-                    path.attr('stroke', this.options.style.stroke);
+                    path.attr('stroke', item.get('model').style.stroke || this.options.style.stroke);
                 }
             } else if (name === 'hover') {
                 if (value)
                     path.attr('stroke', this.options.stateStyles.hover.stroke);
                 else
-                    path.attr('stroke', this.options.style.stroke);
+                    path.attr('stroke', item.get('model').style.stroke || this.options.style.stroke);
             }
         },
         drawShape(cfg, group) {
