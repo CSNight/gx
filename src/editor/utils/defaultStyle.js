@@ -4,6 +4,7 @@ export default {
     nodeStyle: {
         stroke: '#CED4D9',
         fill: '#FFFFFF',
+        fillOpacity:1,
         shadowOffsetX: 0,
         shadowOffsetY: 4,
         shadowBlur: 10,
