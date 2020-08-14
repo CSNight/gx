@@ -1,4 +1,4 @@
-import editorStyle from '@/utils/defaultStyle';
+import editorStyle from '../../utils/defaultStyle';
 import Item from '@antv/g6/lib/item/item';
 import {deepMix} from '@antv/util';
 

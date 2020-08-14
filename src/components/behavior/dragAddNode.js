@@ -1,5 +1,5 @@
-import editorStyle from "@/utils/defaultStyle";
-import {guid2} from "@/utils/utils";
+import editorStyle from "../../utils/defaultStyle";
+import {guid2} from "../../utils/utils";
 
 export default function (G6) {
     G6.registerBehavior('dragAddNode', {

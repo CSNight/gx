@@ -28,7 +28,7 @@
 
 <script>
 
-import registerFlowNode from "@/components/shape/flowNode";
+import registerFlowNode from "../../components/shape/flowNode";
 import G6 from "@antv/g6/lib";
 
 export default {

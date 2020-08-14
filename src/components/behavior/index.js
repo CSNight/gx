@@ -3,9 +3,9 @@ import hoverAnchorActivated from "./hoverAnchorActivated";
 import hoverNodeActivated from "./hoverNodeActivated";
 import dragEdge from "./dragEdge";
 import itemAlign from "./itemAlign";
-import deleteItem from "@/components/behavior/deleteItem";
-import contextMenu from "@/components/behavior/contextMenu";
-import dragAddNode from "@/components/behavior/dragAddNode";
+import deleteItem from "../../components/behavior/deleteItem";
+import contextMenu from "../../components/behavior/contextMenu";
+import dragAddNode from "../../components/behavior/dragAddNode";
 
 export default function (G6) {
     clickSelect(G6);

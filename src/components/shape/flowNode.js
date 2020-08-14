@@ -1,4 +1,4 @@
-import editorStyle from "@/utils/defaultStyle";
+import editorStyle from "../../utils/defaultStyle";
 
 const taskDefaultOptions = {
     icon: null,

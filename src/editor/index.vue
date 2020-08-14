@@ -83,14 +83,14 @@ import ToolbarPanel from "./toolbar/ToolbarPanel";
 import ContextMenu from "./context/ContextMenu";
 import G6 from '@antv/g6/lib';
 import {clone, deepMix, each} from '@antv/util';
-import registerBehavior from '@/components/behavior'
-import registerShape from '@/components/shape'
+import registerBehavior from '../components/behavior'
+import registerShape from '../components/shape'
 import Grid from "@antv/g6/lib/plugins/grid";
-import Command from "@/components/plugins/Command";
-import ContextMenuPlugin from "@/components/plugins/ContextMenu";
-import EditorWrapper from "@/components/plugins/EditorWrapper";
-import ToolBar from "@/components/plugins/ToolBar";
-import {EdgeTooltip, NodeTooltip} from "@/components/behavior/tooltip";
+import Command from "../components/plugins/Command";
+import ContextMenuPlugin from "../components/plugins/ContextMenu";
+import EditorWrapper from "../components/plugins/EditorWrapper";
+import ToolBar from "../components/plugins/ToolBar";
+import {EdgeTooltip, NodeTooltip} from "../components/behavior/tooltip";
 import {createDom} from "@antv/dom-util";
 
 export default {
@@ -423,7 +423,21 @@ export default {
         padding-right: 15px;
     }
 }
-
+.svg-icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.40em;
+    fill: currentColor;
+    overflow: hidden;
+}
+.fa-icon {
+    width: 1.5em;
+    height: 1em;
+    vertical-align: middle;
+    fill: currentColor;
+    overflow: hidden;
+    text-align: center;
+}
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;

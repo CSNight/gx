@@ -1,7 +1,9 @@
 <template>
     <div class="navbar">
         <div class="hamburger-container" style="padding: 0 15px;" @click="toggleSideBar">
-            <svg-icon icon-class="hamburger" :class="'hamburger '+ (sideBar?'is-active':'')"/>
+            <svg :class="'hamburger svg-icon hamburger '+ (sideBar?'is-active':'')">
+                <use :href="'#icon-hamburger'"/>
+            </svg>
         </div>
         <div class="toolbar">
             <el-button :disabled="!barComState.undo" size="mini" class="command" tool-click="undo"
@@ -69,7 +71,7 @@ export default {
     background: #fff;
     box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
     display: flex;
-
+    
     .hamburger-container {
         line-height: 46px;
         height: 100%;
@@ -77,27 +79,27 @@ export default {
         cursor: pointer;
         transition: background .3s;
         -webkit-tap-highlight-color: transparent;
-
+        
         &:hover {
             background: rgba(0, 0, 0, .025)
         }
-
+        
         .hamburger {
             display: inline-block;
             vertical-align: middle;
             width: 20px;
             height: 20px;
         }
-
+        
         .hamburger.is-active {
             transform: rotate(180deg);
         }
     }
-
+    
     .breadcrumb-container {
         float: left;
     }
-
+    
     .toolbar {
         border-left: 3px solid #2bf;
         padding: 0 10px;
@@ -107,13 +109,13 @@ export default {
         width: 100%;
         height: 100%;
         margin-left: 10px;
-
+        
         .el-button {
             border: 1px solid transparent;
             color: #606266;
             margin-right: 5px;
         }
-
+        
         .el-button.is-disabled, .el-button.is-disabled:focus, .el-button.is-disabled:hover {
             color: #C0C4CC;
             cursor: not-allowed;
@@ -121,11 +123,11 @@ export default {
             background-color: #FFF;
             border: 1px solid transparent;
         }
-
+        
         .el-button--mini {
             padding: 5px 5px;
         }
-
+        
         .el-button:hover {
             color: #3a8ee6;
             border: 1px dashed #3a8ee6;

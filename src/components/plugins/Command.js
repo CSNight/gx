@@ -1,5 +1,5 @@
 import {clone, deepMix, isString, mix} from '@antv/util';
-import {guid2} from "@/utils/utils";
+import {guid2} from "../../utils/utils";
 
 class Command {
 

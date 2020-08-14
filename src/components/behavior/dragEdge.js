@@ -1,6 +1,6 @@
-import editorStyle from "@/utils/defaultStyle";
+import editorStyle from "../../utils/defaultStyle";
 import {Marker} from '@antv/g-canvas/lib/shape';
-import {guid2} from "@/utils/utils";
+import {guid2} from "../../utils/utils";
 
 export default function (G6) {
     G6.registerBehavior('dragEdge', {

@@ -1,4 +1,4 @@
-import editorStyle from "@/utils/defaultStyle";
+import editorStyle from "../../utils/defaultStyle";
 import Anchor from '../item/anchor';
 
 const dashArray = [

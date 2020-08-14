@@ -4,12 +4,13 @@ const path = require('path');
 function resolve(dir) {
     return path.join(__dirname, dir)
 }
+
 // 导入compression-webpack-plugin
 // eslint-disable-next-line no-undef
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
 // 定义压缩文件类型
 const productionGzipExtensions = ['js', 'css']
-const name = 'Oxygen';// page title
+const name = 'GraphX';// page title
 
 // If your port is set to 80,
 // use administrator privileges to execute the command line.
