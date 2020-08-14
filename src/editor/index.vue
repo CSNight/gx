@@ -43,29 +43,9 @@
                                            :value="item.name" :label="item.label"/>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="样式">
-                            <el-row style="margin-bottom: 10px">
-                                <el-col :span="12" v-if="selectedModel.shapeClazz==='node'"
-                                        style="display: flex;align-items: center;">
-                                    填充颜色：
-                                    <color-picker v-model="selectedItemStyle" type="fill"/>
-                                </el-col>
-                                <el-col :span="12" style="display: flex;align-items: center">
-                                    线颜色：
-                                    <color-picker v-model="selectedItemStyle" type="stroke"/>
-                                </el-col>
-                            </el-row>
-                            <el-row>
-                                <el-col :span="12" style="display: flex;align-items: center">
-                                    线宽：
-                                    <el-input-number :min="1" :max="10" v-model="selectedItemStyle.lineWidth"/>
-                                </el-col>
-                                <el-col :span="12" style="display: flex;align-items: center">
-                                    阴影：
-                                    <el-input-number :min="0" :max="10" v-model="selectedItemStyle.shadowBlur"/>
-                                </el-col>
-                            </el-row>
-                        </el-form-item>
+
+                        <style-editor :shape-clazz="selectedModel.shapeClazz" v-model="selectedItemStyle"/>
+                        {{ selectedItemStyle }}
                     </el-form>
                     <slot v-bind="{detail:selectedModel}"></slot>
                 </div>
@@ -82,7 +62,7 @@
 import ItemPanel from './sider/ItemPanel'
 import ToolbarPanel from "./toolbar/ToolbarPanel";
 import ContextMenu from "./context/ContextMenu";
-import ColorPicker from "../editor/components/ColorPicker";
+import StyleEditor from "../editor/components/StyleEditor";
 import G6 from '@antv/g6/lib';
 import {clone, deepMix, each} from '@antv/util';
 import registerBehavior from './lib/behavior'
@@ -95,6 +75,7 @@ import ToolBar from "./lib/plugins/ToolBar";
 import {EdgeTooltip, NodeTooltip} from "./lib/behavior/tooltip";
 import {createDom} from "@antv/dom-util";
 import {objDiff} from "../editor/utils/utils";
+
 
 export default {
     name: "Index",
@@ -112,7 +93,7 @@ export default {
             nodeFactory: []
         }
     },
-    components: {ContextMenu, ToolbarPanel, ItemPanel, ColorPicker},
+    components: {StyleEditor, ContextMenu, ToolbarPanel, ItemPanel},
     props: {
         nodeShapes: {
             type: Array,
@@ -308,7 +289,7 @@ export default {
                     this.$message.warning("未选中任何模块")
                 }
             }).catch(() => {
-            
+
             })
         },
         onItemCfgCancel() {
@@ -359,7 +340,7 @@ export default {
     overflow: auto;
     min-height: 100px;
     position: relative;
-    
+
     .btn {
         position: absolute;
         bottom: 30px;
@@ -391,29 +372,29 @@ export default {
     .horizontal-collapse-transition {
         transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out;
     }
-    
+
     .scrollbar-wrapper {
         overflow-x: hidden !important;
     }
-    
+
     .el-scrollbar__bar.is-vertical {
         right: 0;
     }
-    
+
     .el-scrollbar {
         height: 100%;
     }
-    
+
     &.has-logo {
         .el-scrollbar {
             height: calc(100% - 50px);
         }
     }
-    
+
     .is-horizontal {
         display: none;
     }
-    
+
     a {
         display: inline-block;
         width: 100%;
@@ -425,14 +406,14 @@ export default {
     .sidebar-container {
         width: 50px !important;
     }
-    
+
     .main-container {
         margin-left: 50px;
     }
 }
 
 .withoutAnimation {
-    
+
     .main-container,
     .sidebar-container {
         transition: none;
@@ -471,18 +452,18 @@ export default {
     background: #233657;
     text-align: center;
     overflow: hidden;
-    
+
     & .sidebar-logo-link {
         height: 100%;
         width: 100%;
-        
+
         & .sidebar-logo {
             width: 32px;
             height: 32px;
             vertical-align: middle;
             margin-right: 12px;
         }
-        
+
         & .sidebar-title {
             display: inline-block;
             margin: 0;
@@ -494,7 +475,7 @@ export default {
             vertical-align: middle;
         }
     }
-    
+
     &.collapse {
         .sidebar-logo {
             margin-right: 0;
