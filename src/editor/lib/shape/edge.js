@@ -34,10 +34,11 @@ export default function (G6) {
                     path.attr('stroke', item.get('model').style.stroke || this.options.style.stroke);
                 }
             } else if (name === 'hover') {
-                if (value)
+                if (value) {
                     path.attr('stroke', this.options.stateStyles.hover.stroke);
-                else
+                } else {
                     path.attr('stroke', item.get('model').style.stroke || this.options.style.stroke);
+                }
             }
         },
         drawShape(cfg, group) {
@@ -348,14 +349,15 @@ export default function (G6) {
                     path.attr('lineWidth', this.options.stateStyles.selected.lineWidth);
                     path.attr('stroke', this.options.stateStyles.selected.stroke);
                 } else {
-                    path.attr('lineWidth', this.options.style.lineWidth);
-                    path.attr('stroke', this.options.style.stroke);
+                    path.attr('lineWidth',  item.get('model').style.lineWidth ||this.options.style.lineWidth);
+                    path.attr('stroke', item.get('model').style.stroke || this.options.style.stroke);
                 }
             } else if (name === 'hover') {
-                if (value)
+                if (value) {
                     path.attr('stroke', this.options.stateStyles.hover.stroke);
-                else
-                    path.attr('stroke', this.options.style.stroke);
+                } else {
+                    path.attr('stroke', item.get('model').style.stroke || this.options.style.stroke);
+                }
             }
         },
     }, 'cubic');
@@ -385,14 +387,15 @@ export default function (G6) {
                     path.attr('lineWidth', this.options.stateStyles.selected.lineWidth);
                     path.attr('stroke', this.options.stateStyles.selected.stroke);
                 } else {
-                    path.attr('lineWidth', this.options.style.lineWidth);
-                    path.attr('stroke', this.options.style.stroke);
+                    path.attr('lineWidth',  item.get('model').style.lineWidth ||this.options.style.lineWidth);
+                    path.attr('stroke', item.get('model').style.stroke || this.options.style.stroke);
                 }
             } else if (name === 'hover') {
-                if (value)
+                if (value) {
                     path.attr('stroke', this.options.stateStyles.hover.stroke);
-                else
-                    path.attr('stroke', this.options.style.stroke);
+                } else {
+                    path.attr('stroke', item.get('model').style.stroke || this.options.style.stroke);
+                }
             }
         }
     }, 'polyline');
@@ -418,14 +421,15 @@ export default function (G6) {
                     path.attr('lineWidth', this.options.stateStyles.selected.lineWidth);
                     path.attr('stroke', this.options.stateStyles.selected.stroke);
                 } else {
-                    path.attr('lineWidth', this.options.style.lineWidth);
-                    path.attr('stroke', this.options.style.stroke);
+                    path.attr('lineWidth',  item.get('model').style.lineWidth ||this.options.style.lineWidth);
+                    path.attr('stroke', item.get('model').style.stroke || this.options.style.stroke);
                 }
             } else if (name === 'hover') {
-                if (value)
+                if (value) {
                     path.attr('stroke', this.options.stateStyles.hover.stroke);
-                else
-                    path.attr('stroke', this.options.style.stroke);
+                } else {
+                    path.attr('stroke', item.get('model').style.stroke || this.options.style.stroke);
+                }
             }
         },
     }, 'line')
