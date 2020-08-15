@@ -6,23 +6,28 @@
                 <el-input-number :min="1" style="width:100px" controls-position="right"
                                  @change="updateKey" v-model="style.width"/>
             </el-col>
-            <el-col :span="12" style="display: flex;align-items: center;margin-right: -10px">
+            <el-col :span="12" style="display: flex;align-items: center;padding-left:5px">
                 模块高度：
                 <el-input-number :min="0" style="width:100px" controls-position="right"
                                  @change="updateKey" v-model="style.height"/>
             </el-col>
         </el-row>
         <el-row :gutter="10" style="margin-bottom: 10px">
-            <el-col :span="8" v-if="shapeClazz==='node'"
-                    style="display: flex;align-items: center;">
+            <el-col :span="12" v-if="shapeClazz==='node'" style="display: flex;align-items: center;">
                 填充颜色：
                 <color-picker v-model="style" @change="update" type="fill"/>
             </el-col>
-            <el-col :span="8" style="display: flex;align-items: center">
+            <el-col :span="12" style="display: flex;align-items: center" v-if="style['text-shape']">
+                字体颜色：
+                <el-color-picker v-model="style['text-shape'].fill" @change="updateKey"/>
+            </el-col>
+        </el-row>
+        <el-row :gutter="10" style="margin-bottom: 10px">
+            <el-col :span="12" style="display: flex;align-items: center">
                 边线颜色：
                 <color-picker v-model="style" @change="update" type="stroke"/>
             </el-col>
-            <el-col :span="8" style="display: flex;align-items: center">
+            <el-col :span="12" style="display: flex;align-items: center">
                 阴影颜色：
                 <el-color-picker v-model="style.shadowColor" @change="updateKey" show-alpha/>
             </el-col>
@@ -46,8 +51,10 @@
                                  @change="updateKey" v-model="style['text-shape'].fontSize"/>
             </el-col>
             <el-col :span="12" style="display: flex;align-items: center">
-                字体颜色：
-                <el-color-picker v-model="style['text-shape'].fill" @change="updateKey"/>
+                是否粗体：
+                <el-select style="width:100px" v-model="style['text-shape'].fontWeight">
+                    <el-option v-for="weight in ['bold','normal']" :key="weight" :value="weight" :label="weight"/>
+                </el-select>
             </el-col>
         </el-row>
         <el-row :gutter="10" style="margin-bottom: 10px" v-if="style['text-shape']">
@@ -58,9 +65,9 @@
                 </el-select>
             </el-col>
             <el-col :span="12" style="display: flex;align-items: center">
-                粗体：
-                <el-select style="width:100px" v-model="style['text-shape'].fontWeight">
-                    <el-option v-for="weight in ['bold','normal']" :key="weight" :value="weight" :label="weight"/>
+                垂直对齐：
+                <el-select style="width:100px" v-model="style['text-shape'].textBaseline">
+                    <el-option v-for="align in ['middle','left','right']" :key="align" :value="align" :label="align"/>
                 </el-select>
             </el-col>
         </el-row>

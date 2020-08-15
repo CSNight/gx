@@ -27,28 +27,30 @@
                 size="25%"
                 :visible.sync="showDetail"
                 direction="rtl" @save="onItemCfgChange" @cancel="onItemCfgCancel">
-                <div style="height:90%;overflow:auto;padding: 20px;">
-                    <el-form size="mini" label-width="90px">
-                        <el-form-item label="模块ID">
-                            <el-input readonly v-model="selectedModel.id" style="width: 100%"/>
-                        </el-form-item>
-                        <el-form-item label="模块名">
-                            <el-input v-model="selectedModel.label"/>
-                        </el-form-item>
-                        <el-form-item label="模块类型">
-                            <el-input style="width: 100%" v-if="selectedModel.shapeClazz==='node'" readonly
-                                      v-model="selectedModel.type"/>
-                            <el-select style="width: 100%" v-else v-model="selectedModel.type">
-                                <el-option v-for="item in edgeFactory" :key="item.name"
-                                           :value="item.name" :label="item.label"/>
-                            </el-select>
-                        </el-form-item>
-
-                        <style-editor :shape-clazz="selectedModel.shapeClazz" v-model="selectedItemStyle"/>
-                        {{ selectedItemStyle }}
-                    </el-form>
-                    <slot v-bind="{detail:selectedModel}"></slot>
-                </div>
+                <el-collapse style="height:85%;overflow:auto;" accordion value="1">
+                    <el-collapse-item title="基本信息" name="1">
+                        <el-form size="mini" label-width="90px">
+                            <el-form-item label="模块ID">
+                                <el-input readonly v-model="selectedModel.id" style="width: 100%"/>
+                            </el-form-item>
+                            <el-form-item label="模块名">
+                                <el-input v-model="selectedModel.label"/>
+                            </el-form-item>
+                            <el-form-item label="模块类型">
+                                <el-input style="width: 100%" v-if="selectedModel.shapeClazz==='node'" readonly
+                                          v-model="selectedModel.type"/>
+                                <el-select style="width: 100%" v-else v-model="selectedModel.type">
+                                    <el-option v-for="item in edgeFactory" :key="item.name" :value="item.name"
+                                               :label="item.label"/>
+                                </el-select>
+                            </el-form-item>
+                            <style-editor :shape-clazz="selectedModel.shapeClazz" v-model="selectedItemStyle"/>
+                        </el-form>
+                    </el-collapse-item>
+                    <el-collapse-item title="模块详情" name="2">
+                        <slot v-bind="{detail:selectedModel}"></slot>
+                    </el-collapse-item>
+                </el-collapse>
                 <div class="btn">
                     <el-button size="mini" type="primary" @click="onItemCfgChange">Save</el-button>
                     <el-button size="mini" @click="onItemCfgCancel">Cancel</el-button>
@@ -336,15 +338,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/deep/ .el-drawer__header {
+    margin-bottom: 0;
+    padding: 10px 20px 0;
+}
+
 /deep/ .el-drawer__body {
-    overflow: auto;
+    overflow: hidden;
     min-height: 100px;
     position: relative;
+    padding: 10px;
 
     .btn {
-        position: absolute;
-        bottom: 30px;
-        left: 50px;
+        margin: 30px;
     }
 }
 
