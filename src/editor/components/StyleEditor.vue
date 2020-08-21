@@ -52,7 +52,7 @@
             </el-col>
             <el-col :span="12" style="display: flex;align-items: center">
                 是否粗体：
-                <el-select style="width:100px" v-model="style['text-shape'].fontWeight">
+                <el-select style="width:100px" v-model="style['text-shape'].fontWeight" @change="updateKey">
                     <el-option v-for="weight in ['bold','normal']" :key="weight" :value="weight" :label="weight"/>
                 </el-select>
             </el-col>
@@ -60,14 +60,14 @@
         <el-row :gutter="10" style="margin-bottom: 10px" v-if="style['text-shape']">
             <el-col :span="12" style="display: flex;align-items: center">
                 文字对齐：
-                <el-select style="width:100px" v-model="style['text-shape'].textAlign">
+                <el-select style="width:100px" v-model="style['text-shape'].textAlign" @change="updateKey">
                     <el-option v-for="align in ['center','left','right']" :key="align" :value="align" :label="align"/>
                 </el-select>
             </el-col>
             <el-col :span="12" style="display: flex;align-items: center">
                 垂直对齐：
-                <el-select style="width:100px" v-model="style['text-shape'].textBaseline">
-                    <el-option v-for="align in ['middle','left','right']" :key="align" :value="align" :label="align"/>
+                <el-select style="width:100px" v-model="style['text-shape'].textBaseline" @change="updateKey">
+                    <el-option v-for="align in ['middle','top','bottom']" :key="align" :value="align" :label="align"/>
                 </el-select>
             </el-col>
         </el-row>
