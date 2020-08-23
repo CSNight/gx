@@ -10,7 +10,7 @@
   "dependencies": {
     "@antv/dom-util": "2.0.2",
     "@antv/g-canvas": "^0.5.0",
-    "@antv/g6": "3.6.1-beta",
+    "@antv/g6": "3.6.2",
     "@antv/matrix-util": "^3.0.3",
     "@antv/util": "~2.0.9",
     "axios": "^0.19.2",
