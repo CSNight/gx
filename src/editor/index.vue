@@ -127,6 +127,7 @@ export default {
                 console.log("data change")
                 if (val && this.initialized) {
                     this.globalNet.changeData(clone(val));
+                    this.globalNet.fitCenter()
                 }
             }
         },
@@ -187,7 +188,7 @@ export default {
                 animate: true
             });
             this.globalNet.render();
-            this.globalNet.zoomTo(1);
+            this.globalNet.fitCenter()
             this.globalNet.setMode('edit')
             window.addEventListener("resize", () => {
                 this.resizeFunc(this)
