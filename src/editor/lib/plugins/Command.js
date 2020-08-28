@@ -287,7 +287,7 @@ class Command {
             execute: function (graph) {
                 const zoom = graph.getZoom();
                 this.originZoom = zoom;
-                graph.zoomTo(1);
+                graph.fitCenter();
             },
             back: function (graph) {
                 graph.zoomTo(this.originZoom);

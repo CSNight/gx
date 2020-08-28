@@ -127,6 +127,7 @@ export default {
                 console.log("data change")
                 if (val && this.initialized) {
                     this.globalNet.changeData(clone(val));
+                    this.globalNet.fitCenter()
                 }
             }
         },
