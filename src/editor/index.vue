@@ -260,10 +260,14 @@ export default {
                 if (items && items.length > 0) {
                     let item = this.globalNet.findById(items[0]);
                     this.selectedModel = deepMix({shapeClazz: item.get('type')}, {...item.getModel()});
-                    this.selectedItemStyle = deepMix({}, {
-                        ...item.get('originStyle')['node-shape'],
-                        'text-shape': {...item.get('originStyle')['text-shape']}
-                    });
+                    if (item.get('type') === 'node') {
+                        this.selectedItemStyle = deepMix({}, {
+                            ...item.get('originStyle')['node-shape'],
+                            'text-shape': {...item.get('originStyle')['text-shape']}
+                        });
+                    } else {
+                        this.selectedItemStyle = deepMix({}, item.get('originStyle'));
+                    }
                 } else {
                     this.selectedModel = null;
                     this.selectedItemStyle = null;
@@ -279,7 +283,7 @@ export default {
                 const items = this.globalNet.get('selectedItems');
                 if (items && items.length > 0) {
                     let item = this.globalNet.findById(items[0]);
-                    this.checkStyleChange();
+                    this.checkStyleChange(item.get('type'));
                     if (this.globalNet.executeCommand) {
                         this.globalNet.executeCommand('update', {
                             itemId: items[0],
@@ -299,13 +303,18 @@ export default {
         onItemCfgCancel() {
             this.showDetail = false;
         },
-        checkStyleChange() {
+        checkStyleChange(st) {
             if (this.selectedModel && this.selectedItemStyle) {
                 let item = this.globalNet.findById(this.selectedModel.id);
                 if (item) {
-                    let originStyle = {
-                        ...item.get('originStyle')['node-shape'],
-                        'text-shape': {...item.get('originStyle')['text-shape']}
+                    let originStyle = null;
+                    if (st === "node") {
+                        originStyle = {
+                            ...item.get('originStyle')['node-shape'],
+                            'text-shape': {...item.get('originStyle')['text-shape']}
+                        }
+                    } else {
+                        originStyle = item.get('originStyle')
                     }
                     let diff = {};
                     objDiff(this.selectedItemStyle, originStyle, diff)
