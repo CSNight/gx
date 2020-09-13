@@ -1,14 +1,14 @@
 <template>
     <el-scrollbar wrap-class="scrollbar-wrapper">
         <el-collapse class="itemPanel">
-            <el-collapse-item>
+            <el-collapse-item v-for="cls in clazz" :key="cls.value">
                 <template slot="title">
                     <svg-icon icon-class="keyspace" style="color:#233657;width: 24px;height:24px"/>
-                    <span v-if="showLabel">基础控件</span>
+                    <span v-if="showLabel">{{ cls.label }}</span>
                 </template>
-                <el-tree empty-text="" :data="tree">
+                <el-tree empty-text="" :data="cls.children">
                     <div class="custom-tree-node" draggable="true" slot-scope="{ node,data }"
-                         :data-item="JSON.stringify({type:'tk-node',size:'80*40',label:'Model_'+data.val})">
+                         :data-item="JSON.stringify(data)">
                         <el-tooltip :content="node.label" placement="right" effect="light">
                             <fa-icon style="margin-left: 12px;color:#2bf" icon-class="fa fa-cube"/>
                         </el-tooltip>
@@ -16,20 +16,14 @@
                     </div>
                 </el-tree>
             </el-collapse-item>
-            <el-collapse-item>
-            
-            </el-collapse-item>
-            <el-collapse-item>
-            
-            </el-collapse-item>
         </el-collapse>
     </el-scrollbar>
 </template>
 
 <script>
-
-import registerFlowNode from "../lib/shape/flowNode";
-import G6 from "@antv/g6/lib";
+import G6 from '@antv/g6/lib';
+import {getDictByClazz, getShapes} from "@/api/shape_def";
+import registerShape from '../lib/shape'
 
 export default {
     name: 'ItemPanel',
@@ -45,7 +39,7 @@ export default {
     },
     data() {
         return {
-            tree: []
+            clazz: [], tree: [], shapes: [],
         }
     },
     mounted() {
@@ -66,15 +60,56 @@ export default {
     },
     methods: {
         queryData() {
-            this.tree = [{label: 'Model_1', val: 1}, {label: 'Model_2', val: 2}, {label: 'Model_3', val: 3}, {
-                label: 'Model_4',
-                val: 4
-            }]
             console.log("initialize items panel")
-            //TODO register Shape From Database
-            registerFlowNode(G6, this.tree);
-            this.$nextTick(() => {
-                this.$emit('init', {})
+            Promise.all([getDictByClazz('shape'), getShapes()]).then(([dict, resp]) => {
+                if (dict.data.status === 200 && dict.data.code === 'OK') {
+                    let cls = dict.data.message;
+                    for (let i = 0; i < cls.length; i++) {
+                        if (cls[i].val === 'node') {
+                            this.clazz.push({label: cls[i].name, value: cls[i].code, children: []})
+                        }
+                    }
+                }
+                if (resp.data.status === 200 && resp.data.code === 'OK') {
+                    this.shapes = resp.data.message;
+                    for (let i = 0; i < this.shapes.length; i++) {
+
+                        if (this.shapes[i].labelCfg) {
+                            this.shapes[i].labelCfg = JSON.parse(this.shapes[i].labelCfg)
+                        }
+                        if (this.shapes[i].icon) {
+                            this.shapes[i].icon = JSON.parse(this.shapes[i].icon)
+                        }
+                        this.shapes[i].style = JSON.parse(this.shapes[i].style)
+                        if (this.shapes[i].shape_type === "node") {
+                            let size = this.shapes[i].style.width + "*" + this.shapes[i].style.height;
+                            let nodeDef = {
+                                id: this.shapes[i].id,
+                                type: this.shapes[i].name,
+                                size: size,
+                                label: this.shapes[i].label || this.shapes[i].name
+                            }
+                            for (let j = 0; j < this.clazz.length; j++) {
+                                if (this.clazz[j].value === this.shapes[i].clazz) {
+                                    this.clazz[j].children.push(nodeDef)
+                                }
+                            }
+                        }
+                        registerShape(G6, this.shapes[i])
+                    }
+                    //TODO register Shape From Database
+                    this.$nextTick(() => {
+                        this.$emit('init', {})
+                    })
+                } else {
+                    this.$message.error({
+                        message: "查询出错!" + resp.data.message
+                    });
+                }
+            }).catch(() => {
+                this.$message.error({
+                    message: "查询出错!"
+                });
             })
         },
     }
@@ -98,12 +133,12 @@ export default {
     .fa-icon {
         margin-right: 4px;
     }
-    
+
     .svg-icon {
         margin-right: 16px;
         margin-left: 8px;
     }
-    
+
     .el-icon {
         margin-right: 4px;
     }
@@ -114,12 +149,12 @@ export default {
         .fa-icon {
             margin-right: 4px;
         }
-        
+
         .svg-icon {
             margin-right: 4px;
             margin-left: 8px;
         }
-        
+
         .el-icon {
             margin-right: 4px;
         }
