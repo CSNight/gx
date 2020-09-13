@@ -67,7 +67,6 @@ export default function (G6) {
         _addNode(p) {
             if (this.graph.get('addNodeDragging')) {
                 const addModel = this.graph.get('addModel');
-               // addModel.type = 'tk-node';
                 const id = addModel.type + "$" + guid2();
                 const x = p.x;
                 const y = p.y;
