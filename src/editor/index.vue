@@ -68,7 +68,6 @@ import StyleEditor from "../editor/components/StyleEditor";
 import G6 from '@antv/g6/lib';
 import {clone, deepMix, each} from '@antv/util';
 import registerBehavior from './lib/behavior'
-import registerShape from './lib/shape'
 import Grid from "@antv/g6/lib/plugins/grid";
 import Command from "./lib/plugins/Command";
 import ContextMenuPlugin from "./lib/plugins/ContextMenu";
@@ -171,7 +170,6 @@ export default {
         init() {
             console.log('initializing graph editor')
             registerBehavior(G6);
-            registerShape(G6)
             let plugins = this.initPlugins();
             this.globalNet = new G6.Graph({
                 container: 'flowChart',      // 容器ID
@@ -262,7 +260,10 @@ export default {
                 if (items && items.length > 0) {
                     let item = this.globalNet.findById(items[0]);
                     this.selectedModel = deepMix({shapeClazz: item.get('type')}, {...item.getModel()});
-                    this.selectedItemStyle = deepMix({}, item.get('originStyle'));
+                    this.selectedItemStyle = deepMix({}, {
+                        ...item.get('originStyle')['node-shape'],
+                        'text-shape': {...item.get('originStyle')['text-shape']}
+                    });
                 } else {
                     this.selectedModel = null;
                     this.selectedItemStyle = null;
@@ -302,7 +303,10 @@ export default {
             if (this.selectedModel && this.selectedItemStyle) {
                 let item = this.globalNet.findById(this.selectedModel.id);
                 if (item) {
-                    let originStyle = item.get('originStyle')
+                    let originStyle = {
+                        ...item.get('originStyle')['node-shape'],
+                        'text-shape': {...item.get('originStyle')['text-shape']}
+                    }
                     let diff = {};
                     objDiff(this.selectedItemStyle, originStyle, diff)
                     if (diff && Object.keys(diff).length > 0) {
