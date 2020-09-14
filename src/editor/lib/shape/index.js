@@ -1,12 +1,13 @@
 import registerAnchor from './anchor'
 import registerNode from './node'
-import registerEdge from './edge'
+import registerEdge, {defaultEdge} from './edge'
 
+defaultEdge();
 registerAnchor();
-export default function (G6, _shapeDef) {
+export default function (_shapeDef) {
     if (_shapeDef.shape_type === "node") {
-        registerNode(G6, _shapeDef);
+        registerNode(_shapeDef);
     } else {
-        registerEdge(G6, _shapeDef);
+        registerEdge(_shapeDef);
     }
 }

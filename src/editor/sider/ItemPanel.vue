@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import G6 from '@antv/g6/lib';
 import {getDictByClazz} from "@/api/shape_def";
 import registerShape from '../lib/shape'
 
@@ -92,7 +91,7 @@ export default {
                                 }
                             }
                         }
-                        registerShape(G6, this.shapes[i])
+                        registerShape(this.shapes[i])
                     }
                     this.$nextTick(() => {
                         this.$emit('init', {})

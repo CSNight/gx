@@ -1,4 +1,5 @@
 import editorStyle from "../../utils/defaultStyle";
+import G6 from '@antv/g6/lib'
 
 const uniqBy = (arr, key) => {
     const result = [];
@@ -9,7 +10,7 @@ const uniqBy = (arr, key) => {
     return result;
 };
 
-export default function (G6) {
+export function defaultEdge() {
     G6.registerEdge('flow-poly-round', {
         options: {
             style: {
@@ -327,4 +328,9 @@ export default function (G6) {
             return polylinePoints;
         },
     }, 'polyline');
+}
+
+export default function () {
+
+
 }

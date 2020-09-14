@@ -1,6 +1,7 @@
 import editorStyle from "../../utils/defaultStyle";
 import Anchor from '../item/anchor';
 import {merge} from "lodash";
+import G6 from '@antv/g6/lib'
 
 const dashArray = [
     [0, 1],
@@ -16,7 +17,7 @@ const dashArray = [
 const interval = 9;
 const lineDash = [4, 2, 1, 2];
 
-export default function (G6, _userCfg) {
+export default function (_userCfg) {
     G6.registerNode(_userCfg.name, {
         options: {
             icon: _userCfg.icon,
@@ -159,22 +160,22 @@ export default function (G6, _userCfg) {
             let outerR = w / 2;
             let innerR = outerR * 3 / 8
             let path = [];
-
+            
             for (let i = 0; i < 5; i++) {
                 let x1 = Math.cos((18 + 72 * i) / 180 * Math.PI) * outerR;
                 let y1 = Math.sin((18 + 72 * i) / 180 * Math.PI) * outerR;
                 let x2 = Math.cos((54 + 72 * i) / 180 * Math.PI) * innerR;
                 let y2 = Math.sin((54 + 72 * i) / 180 * Math.PI) * innerR;
-
+                
                 if (i === 0) {
                     path.push(['M', x1, -y1]);
                 } else {
                     path.push(['L', x1, -y1]);
                 }
-
+                
                 path.push(['L', x2, -y2]);
             }
-
+            
             path.push(['Z']);
             return path;
         },
