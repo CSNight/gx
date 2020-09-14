@@ -330,7 +330,77 @@ export function defaultEdge() {
     }, 'polyline');
 }
 
-export default function () {
-
-
+export default function (_userCfg) {
+    G6.registerEdge(_userCfg.name, {
+        options: {
+            label: _userCfg.label,
+            labelCfg: _userCfg.labelCfg,
+            style: _userCfg.style
+        },
+        drawLabel(cfg, group) {
+            const labelCfg = this.options.labelCfg || {};
+            const labelStyle = this.getLabelStyle(cfg, labelCfg, group);
+            const label = group.addShape('text', {
+                attrs: labelStyle
+            });
+            const labelBBox = label.getBBox();
+            group.addShape('rect', {
+                className: 'edge-labelRect',
+                attrs: {
+                    x: labelBBox.x - 2,
+                    y: labelBBox.y - 2,
+                    width: labelBBox.width + 2,
+                    height: labelBBox.height + 2,
+                    fill: '#fff',
+                    stroke: '#fff',
+                }
+            });
+            group.toBack();
+            label.toFront();
+            return label;
+        },
+        setState(name, value, item) {
+            const group = item.getContainer();
+            const path = group.getChildByIndex(0);
+            let originColor = item.get('model').style.stroke ? item.get('model').style.stroke : this.options.style.stroke
+            if (name === 'selected') {
+                if (value) {
+                    this._setArrowColor(path, this.options.style.selectStrokeColor)
+                    path.attr('stroke', this.options.style.selectStrokeColor);
+                } else {
+                    this._setArrowColor(path, originColor)
+                    path.attr('stroke', originColor);
+                }
+            } else if (name === 'hover') {
+                if (value) {
+                    this._setArrowColor(path, this.options.style.hoverStrokeColor)
+                    path.attr('stroke', this.options.style.hoverStrokeColor);
+                } else {
+                    this._setArrowColor(path, originColor)
+                    path.attr('stroke', originColor);
+                }
+            }
+        },
+        _setArrowColor(path, color) {
+            if (path.attrs.endArrow) {
+                path.attrs.endArrow.fill = path.attrs.endArrow.stroke = color
+            }
+            if (path.attrs.startArrow) {
+                path.attrs.startArrow.fill = path.attrs.startArrow.stroke = color
+            }
+        },
+        afterUpdate(cfg, item) {
+            const label = item.getContainer().findByClassName('edge-label');
+            const labelRect = item.getContainer().findByClassName('edge-labelRect');
+            if (label) {
+                const labelBBox = label.getBBox();
+                labelRect.attr({
+                    x: labelBBox.x - 2,
+                    y: labelBBox.y - 2,
+                    width: labelBBox.width + 2,
+                    height: labelBBox.height + 2,
+                });
+            }
+        },
+    }, _userCfg.shape_base);
 }
