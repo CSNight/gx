@@ -29,9 +29,9 @@ service.interceptors.response.use(
                 type: 'warning',
                 center: true
             }).then(() => {
-                location.reload();
+                location.href = "http://localhost:8081/?relogin=" + btoa("http://localhost:8080")
             }).catch(() => {
-                location.reload();
+            
             });
             return Promise.reject("登录过期");
         } else {
