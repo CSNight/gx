@@ -1,7 +1,8 @@
 import axios from 'axios'
 import {Message, MessageBox} from 'element-ui'
+import store from "@/store";
 
-const baseUrl = 'https://127.0.0.1';
+const baseUrl = store.getters.baseUrl;
 // create an axios instance
 const service = axios.create({
     baseURL: baseUrl, // url = base url + request url
@@ -36,7 +37,7 @@ service.interceptors.response.use(
         } else {
             return response
         }
-
+        
     },
     error => {
         Message({
