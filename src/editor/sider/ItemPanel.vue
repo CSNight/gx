@@ -1,7 +1,7 @@
 <template>
     <el-scrollbar wrap-class="scrollbar-wrapper">
         <el-collapse class="itemPanel">
-            <el-collapse-item v-for="cls in clazz" :key="cls.value">
+            <el-collapse-item v-for="cls in nodeClazz" :key="cls.value">
                 <template slot="title">
                     <svg-icon icon-class="keyspace" style="color:#233657;width: 24px;height:24px"/>
                     <span v-if="showLabel">{{ cls.label }}</span>
@@ -15,6 +15,25 @@
                         <span v-if="showLabel">{{ node.label }}</span>
                     </div>
                 </el-tree>
+            </el-collapse-item>
+            <el-collapse-item style="text-align: center" v-for="cls in edgeClazz" :key="cls.value">
+                <template slot="title">
+                    <svg-icon icon-class="connection" style="color:#233657;width: 24px;height:24px"/>
+                    <span v-if="showLabel">{{ cls.label }}</span>
+                </template>
+                <el-tree empty-text="" :data="cls.children">
+                    <div class="custom-tree-node" draggable="true" slot-scope="{ node,data }"
+                         :data-item="JSON.stringify(data)">
+                        <el-tooltip :content="node.label" placement="right" effect="light">
+                            <fa-icon style="margin-left: 8px;color:#2bf" icon-class="fa fa-link"/>
+                        </el-tooltip>
+                        <el-radio v-model="activateEdge" v-for="edge in cls.children"
+                                  :key="edge.id" :label="edge.type" size="mini">
+                            {{ edge.label }}
+                        </el-radio>
+                    </div>
+                </el-tree>
+            
             </el-collapse-item>
         </el-collapse>
     </el-scrollbar>
@@ -38,7 +57,7 @@ export default {
     },
     data() {
         return {
-            clazz: []
+            edgeClazz: [], nodeClazz: [], activateEdge: ''
         }
     },
     mounted() {
@@ -59,14 +78,17 @@ export default {
     },
     methods: {
         registerData() {
-            this.clazz = [];
+            this.nodeClazz = [];
+            this.edgeClazz = [];
             console.log("initialize items panel")
             getDictByClazz('shape').then((dict) => {
                 if (dict.data.status === 200 && dict.data.code === 'OK') {
                     let cls = dict.data.message;
                     for (let i = 0; i < cls.length; i++) {
                         if (cls[i].val === 'node') {
-                            this.clazz.push({label: cls[i].name, value: cls[i].code, children: []})
+                            this.nodeClazz.push({label: cls[i].name, value: cls[i].code, children: []})
+                        } else {
+                            this.edgeClazz.push({label: cls[i].name, value: cls[i].code, children: []})
                         }
                     }
                     for (let i = 0; i < this.shapes.length; i++) {
@@ -85,9 +107,19 @@ export default {
                                 size: size,
                                 label: this.shapes[i].label || this.shapes[i].name
                             }
-                            for (let j = 0; j < this.clazz.length; j++) {
-                                if (this.clazz[j].value === this.shapes[i].clazz) {
-                                    this.clazz[j].children.push(nodeDef)
+                            for (let j = 0; j < this.nodeClazz.length; j++) {
+                                if (this.nodeClazz[j].value === this.shapes[i].clazz) {
+                                    this.nodeClazz[j].children.push(nodeDef)
+                                }
+                            }
+                        } else {
+                            for (let j = 0; j < this.edgeClazz.length; j++) {
+                                if (this.edgeClazz[j].value === this.shapes[i].clazz) {
+                                    this.edgeClazz[j].children.push({
+                                        id: this.shapes[i].id,
+                                        type: this.shapes[i].name,
+                                        label: this.shapes[i].label || this.shapes[i].name
+                                    })
                                 }
                             }
                         }
