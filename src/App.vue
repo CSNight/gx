@@ -1,6 +1,6 @@
 <template>
     <div id="app" class="app">
-        <layout ref="editor" :model-data="modelData" :node-shapes="nodeShapes">
+        <layout ref="editor" :model-data="modelData">
             <template v-slot:default="slotProps">
                 <el-form size="mini" label-width="90px">
                     <el-form-item label="模块信息">
@@ -20,7 +20,7 @@ export default {
     components: {layout},
     data() {
         return {
-            modelData: {}, nodeShapes: [1]
+            modelData: {}
         }
     },
     mounted() {
@@ -29,8 +29,7 @@ export default {
                 // 点集
                 nodes: [],
                 // 边集
-                edges: [
-                ]
+                edges: []
             }
         }, 100);
         

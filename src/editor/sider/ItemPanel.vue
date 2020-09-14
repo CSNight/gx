@@ -22,13 +22,13 @@
 
 <script>
 import G6 from '@antv/g6/lib';
-import {getDictByClazz, getShapes} from "@/api/shape_def";
+import {getDictByClazz} from "@/api/shape_def";
 import registerShape from '../lib/shape'
 
 export default {
     name: 'ItemPanel',
     props: {
-        nodes: {
+        shapes: {
             type: Array,
             required: true
         },
@@ -39,29 +39,30 @@ export default {
     },
     data() {
         return {
-            clazz: [], tree: [], shapes: [],
+            clazz: []
         }
     },
     mounted() {
         this.$nextTick(() => {
-            if (this.nodes.length > 0) {
-                this.queryData();
+            if (this.shapes.length > 0) {
+                this.registerData();
             }
         })
     },
     watch: {
-        nodes: {
+        shapes: {
             handler: function (val) {
                 if (val && val.length > 0) {
-                    this.queryData();
+                    this.registerData();
                 }
             }
         }
     },
     methods: {
-        queryData() {
+        registerData() {
+            this.clazz = [];
             console.log("initialize items panel")
-            Promise.all([getDictByClazz('shape'), getShapes()]).then(([dict, resp]) => {
+            getDictByClazz('shape').then((dict) => {
                 if (dict.data.status === 200 && dict.data.code === 'OK') {
                     let cls = dict.data.message;
                     for (let i = 0; i < cls.length; i++) {
@@ -69,11 +70,7 @@ export default {
                             this.clazz.push({label: cls[i].name, value: cls[i].code, children: []})
                         }
                     }
-                }
-                if (resp.data.status === 200 && resp.data.code === 'OK') {
-                    this.shapes = resp.data.message;
                     for (let i = 0; i < this.shapes.length; i++) {
-
                         if (this.shapes[i].labelCfg) {
                             this.shapes[i].labelCfg = JSON.parse(this.shapes[i].labelCfg)
                         }
@@ -97,13 +94,12 @@ export default {
                         }
                         registerShape(G6, this.shapes[i])
                     }
-                    //TODO register Shape From Database
                     this.$nextTick(() => {
                         this.$emit('init', {})
                     })
                 } else {
                     this.$message.error({
-                        message: "查询出错!" + resp.data.message
+                        message: "查询出错!" + dict.data.message
                     });
                 }
             }).catch(() => {
@@ -133,12 +129,12 @@ export default {
     .fa-icon {
         margin-right: 4px;
     }
-
+    
     .svg-icon {
         margin-right: 16px;
         margin-left: 8px;
     }
-
+    
     .el-icon {
         margin-right: 4px;
     }
@@ -149,12 +145,12 @@ export default {
         .fa-icon {
             margin-right: 4px;
         }
-
+        
         .svg-icon {
             margin-right: 4px;
             margin-left: 8px;
         }
-
+        
         .el-icon {
             margin-right: 4px;
         }

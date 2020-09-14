@@ -14,7 +14,7 @@
                     </div>
                 </transition>
             </div>
-            <item-panel ref="sidebar" :nodes="nodeShapes" :show-label="!isCollapse" @init="initItemPanel"/>
+            <item-panel ref="sidebar" :shapes="shapes" :show-label="!isCollapse" @init="initItemPanel"/>
         </div>
         <div class="main-container">
             <ToolbarPanel ref="topBar" :side-bar.sync="sidebar" @toggleSide="toggleSideBar"/>
@@ -76,6 +76,7 @@ import ToolBar from "./lib/plugins/ToolBar";
 import {EdgeTooltip, NodeTooltip} from "./lib/behavior/tooltip";
 import {createDom} from "@antv/dom-util";
 import {objDiff} from "../editor/utils/utils";
+import {getShapes} from "@/api/shape_def";
 
 
 export default {
@@ -90,16 +91,13 @@ export default {
             detailUpdate: false,
             initialized: false,
             selectedItemStyle: null,
+            shapes: [],
             edgeFactory: [],
             nodeFactory: []
         }
     },
     components: {StyleEditor, ContextMenu, ToolbarPanel, ItemPanel},
     props: {
-        nodeShapes: {
-            type: Array,
-            required: true
-        },
         modelData: {
             type: Object,
             required: true
@@ -130,7 +128,7 @@ export default {
                 }
             }
         },
-        nodeShapes: {
+        shapes: {
             handler: function (val) {
                 if (val && val.length > 0) {
                     this.updateShapeFactory();
@@ -192,6 +190,22 @@ export default {
                 this.resizeFunc(this)
             });
             this.initEvent();
+            this.loadShapes();
+        },
+        loadShapes() {
+            getShapes().then((resp) => {
+                if (resp.data.status === 200 && resp.data.code === 'OK') {
+                    this.shapes = resp.data.message;
+                } else {
+                    this.$message.error({
+                        message: "查询出错!" + resp.data.message
+                    });
+                }
+            }).catch(() => {
+                this.$message.error({
+                    message: "查询出错!"
+                });
+            })
         },
         initPlugins() {
             console.log('initializing graph plugins')
@@ -297,7 +311,7 @@ export default {
                     this.$message.warning("未选中任何模块")
                 }
             }).catch(() => {
-
+            
             })
         },
         onItemCfgCancel() {
@@ -327,11 +341,11 @@ export default {
         updateShapeFactory() {
             this.edgeFactory = [];
             this.nodeFactory = [];
-            for (let i = 0; i < this.nodeShapes.length; i++) {
-                let shapeDef = this.nodeShapes[i];
-                if (shapeDef.shapeType === 'node') {
+            for (let i = 0; i < this.shapes.length; i++) {
+                let shapeDef = this.shapes[i];
+                if (shapeDef.shape_type === 'node') {
                     this.nodeFactory.push(shapeDef)
-                } else if (shapeDef.shapeType === 'edge') {
+                } else if (shapeDef.shape_type === 'edge') {
                     this.edgeFactory.push(shapeDef)
                 }
             }
@@ -362,7 +376,7 @@ export default {
     min-height: 100px;
     position: relative;
     padding: 10px;
-
+    
     .btn {
         margin: 30px;
     }
@@ -392,29 +406,29 @@ export default {
     .horizontal-collapse-transition {
         transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out;
     }
-
+    
     .scrollbar-wrapper {
         overflow-x: hidden !important;
     }
-
+    
     .el-scrollbar__bar.is-vertical {
         right: 0;
     }
-
+    
     .el-scrollbar {
         height: 100%;
     }
-
+    
     &.has-logo {
         .el-scrollbar {
             height: calc(100% - 50px);
         }
     }
-
+    
     .is-horizontal {
         display: none;
     }
-
+    
     a {
         display: inline-block;
         width: 100%;
@@ -426,14 +440,14 @@ export default {
     .sidebar-container {
         width: 50px !important;
     }
-
+    
     .main-container {
         margin-left: 50px;
     }
 }
 
 .withoutAnimation {
-
+    
     .main-container,
     .sidebar-container {
         transition: none;
@@ -472,18 +486,18 @@ export default {
     background: #233657;
     text-align: center;
     overflow: hidden;
-
+    
     & .sidebar-logo-link {
         height: 100%;
         width: 100%;
-
+        
         & .sidebar-logo {
             width: 32px;
             height: 32px;
             vertical-align: middle;
             margin-right: 12px;
         }
-
+        
         & .sidebar-title {
             display: inline-block;
             margin: 0;
@@ -495,7 +509,7 @@ export default {
             vertical-align: middle;
         }
     }
-
+    
     &.collapse {
         .sidebar-logo {
             margin-right: 0;
