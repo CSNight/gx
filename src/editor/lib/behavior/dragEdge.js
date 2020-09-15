@@ -128,10 +128,12 @@ export default function (G6) {
             });
         },
         _addEdge() {
+            let selectedEdgeDom = document.querySelector(".el-radio .is-checked>input")
+            let edgeType = selectedEdgeDom ? selectedEdgeDom.value : "flow-poly-round"
             if (this.origin.targetNode) {
                 const addModel = {
                     id: 'flow$' + guid2(),
-                    type: 'flow-poly-round',
+                    type: edgeType,
                     source: this.origin.sourceNode.get('id'),
                     target: this.origin.targetNode.get('id'),
                     sourceAnchor: this.origin.sourceAnchor,
@@ -145,7 +147,7 @@ export default function (G6) {
                 } else {
                     this.graph.addItem('edge', addModel);
                 }
-
+                
             }
         }
     });
