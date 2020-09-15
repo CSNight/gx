@@ -22,18 +22,15 @@
                     <span v-if="showLabel">{{ cls.label }}</span>
                 </template>
                 <el-tree empty-text="" :data="cls.children">
-                    <div class="custom-tree-node" draggable="true" slot-scope="{ node,data }"
-                         :data-item="JSON.stringify(data)">
+                    <div class="custom-tree-node" draggable="true" slot-scope="{ node,data }">
                         <el-tooltip :content="node.label" placement="right" effect="light">
                             <fa-icon style="margin-left: 8px;color:#2bf" icon-class="fa fa-link"/>
                         </el-tooltip>
-                        <el-radio v-model="activateEdge" v-for="edge in cls.children"
-                                  :key="edge.id" :label="edge.type" size="mini">
-                            {{ edge.label }}
+                        <el-radio v-model="activateEdge" :key="data.id" :label="data.type" size="mini">
+                            {{ data.label }}
                         </el-radio>
                     </div>
                 </el-tree>
-            
             </el-collapse-item>
         </el-collapse>
     </el-scrollbar>
@@ -92,8 +89,8 @@ export default {
                         }
                     }
                     for (let i = 0; i < this.shapes.length; i++) {
-                        if (this.shapes[i].labelCfg) {
-                            this.shapes[i].labelCfg = JSON.parse(this.shapes[i].labelCfg)
+                        if (this.shapes[i].label_style) {
+                            this.shapes[i].labelCfg = JSON.parse(this.shapes[i].label_style)
                         }
                         if (this.shapes[i].icon) {
                             this.shapes[i].icon = JSON.parse(this.shapes[i].icon)
