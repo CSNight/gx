@@ -37,12 +37,7 @@
                                 <el-input v-model="selectedModel.label"/>
                             </el-form-item>
                             <el-form-item label="模块类型">
-                                <el-input style="width: 100%" v-if="selectedModel.shapeClazz==='node'" readonly
-                                          v-model="selectedModel.type"/>
-                                <el-select style="width: 100%" v-else v-model="selectedModel.type">
-                                    <el-option v-for="item in edgeFactory" :key="item.name" :value="item.name"
-                                               :label="item.label"/>
-                                </el-select>
+                                <el-input style="width: 100%" readonly v-model="selectedModel.type"/>
                             </el-form-item>
                             <style-editor :shape-clazz="selectedModel.shapeClazz" v-model="selectedItemStyle"/>
                         </el-form>
