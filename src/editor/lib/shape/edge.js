@@ -400,6 +400,7 @@ export default function (_userCfg) {
                     width: labelBBox.width + 2,
                     height: labelBBox.height + 2,
                 });
+                labelRect.setMatrix(label.attr('matrix'))
             }
         },
     }, _userCfg.shape_base);
