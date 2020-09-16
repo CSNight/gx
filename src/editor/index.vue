@@ -19,7 +19,9 @@
         <div class="main-container">
             <ToolbarPanel ref="topBar" :side-bar.sync="sidebar" @toggleSide="toggleSideBar"/>
             <section class="editor-main">
-                <div id="flowChart" style="position: relative;box-shadow: 0 0 10px 4px rgba(0,0,0,0.1)"></div>
+                <div style="position: relative;height: auto;width: auto">
+                    <div id="flowChart" style="position: relative;box-shadow: 0 0 10px 4px rgba(0,0,0,0.1)"></div>
+                </div>
             </section>
             <el-drawer
                 v-if="selectedModel!==null"
@@ -68,10 +70,10 @@ import Command from "./lib/plugins/Command";
 import ContextMenuPlugin from "./lib/plugins/ContextMenu";
 import EditorWrapper from "./lib/plugins/EditorWrapper";
 import ToolBar from "./lib/plugins/ToolBar";
-import {EdgeTooltip, NodeTooltip} from "./lib/behavior/tooltip";
 import {createDom} from "@antv/dom-util";
-import {objDiff} from "../editor/utils/utils";
+import {objDiff} from "./utils/utils";
 import {getShapes} from "@/api/shape_def";
+import {formatEdgeTooltip, formatNodeTooltip} from "@/editor/lib/behavior/tooltip";
 
 
 export default {
@@ -168,7 +170,7 @@ export default {
                 container: 'flowChart',      // 容器ID
                 modes: {
                     brush: [this.initBrushBehavior()],
-                    edit: ['drag-canvas', NodeTooltip, EdgeTooltip, 'drag-node', 'itemAlign', 'deleteItem', 'contextMenu', 'hoverAnchorActivated',
+                    edit: ['drag-canvas', 'drag-node', 'itemAlign', 'deleteItem', 'contextMenu', 'hoverAnchorActivated',
                         'hoverNodeActivated', 'zoom-canvas', 'clickSelected', 'dragEdge', 'dragAddNode']
                 },
                 plugins: plugins,
@@ -211,11 +213,24 @@ export default {
                 container: this.$refs.contextMenu.$el,
                 contextCom: this.$refs.contextMenu
             });
+            const tooltip = new G6.Tooltip({
+                offsetX: 10,
+                offsetY: 20,
+                getContent(e) {
+                    if (e.item.get('type') === 'node') {
+                        return formatNodeTooltip(e.item.get('model'));
+                    } else if (e.item.get('type') === 'edge') {
+                        return formatEdgeTooltip(e.item.get('model'));
+                    }
+                    return "";
+                },
+                itemTypes: ['node', 'edge']
+            });
             const toolbar = new ToolBar({
                 container: this.$refs.topBar.$el,
                 toolbarCom: this.$refs.topBar
             });
-            return [grid, editorWrapper, command, toolbar, contextMenu]
+            return [grid, editorWrapper, command, toolbar, contextMenu, tooltip]
         },
         initItemPanel() {
             console.log("initialize items plugins and shapes")
@@ -451,7 +466,7 @@ export default {
 
 .editor-main {
     /* 50= navbar  50  */
-    min-height: calc(100vh - 50px);
+    height: calc(100vh - 50px);
     width: 100%;
     overflow: hidden;
     display: flex;
@@ -579,13 +594,8 @@ export default {
 }
 
 .g6-component-tooltip {
-    border: 1px solid #e2e2e2;
-    border-radius: 4px;
     font-size: 12px;
     color: #545454;
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 10px 8px;
-    box-shadow: rgb(174, 174, 174) 0 0 10px;
 }
 
 .tooltip-type {
