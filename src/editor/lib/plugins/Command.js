@@ -2,25 +2,25 @@ import {clone, deepMix, isString, mix} from '@antv/util';
 import {guid2} from "../../utils/utils";
 
 class Command {
-
+    
     constructor() {
         this._cfgs = this.getDefaultCfg();
         this.list = [];
         this.queue = [];
     }
-
+    
     getDefaultCfg() {
         return {_command: {zoomDelta: .1, queue: [], current: 0, clipboard: []}};
     }
-
+    
     get(key) {
         return this._cfgs[key];
     }
-
+    
     set(key, val) {
         this._cfgs[key] = val;
     }
-
+    
     initPlugin(graph) {
         this.initCommands();
         graph.getCommands = () => {
@@ -37,7 +37,7 @@ class Command {
             return this.enable(name, graph)
         };
     }
-
+    
     registerCommand(name, cfg,) {
         if (this[name]) {
             mix(this[name], cfg);
@@ -58,7 +58,8 @@ class Command {
                     this.method && (isString(this.method) ? graph[this.method]() : this.method(graph));
                 },
                 back(graph) {
-                    graph.read(this.snapShot);
+                    graph.changeData(this.snapShot);
+                   // graph.refresh();
                     graph.set('selectedItems', this.selectedItems);
                 }
             }, cfg);
@@ -66,7 +67,7 @@ class Command {
             this.list.push(cmd);
         }
     }
-
+    
     execute(name, graph, cfg) {
         const cmd = mix({}, this[name], cfg);
         const manager = this.get('_command');
@@ -82,11 +83,11 @@ class Command {
         graph.emit('aftercommandexecute', {command: cmd});
         return cmd;
     }
-
+    
     enable(name, graph) {
         return this[name].enable(graph);
     }
-
+    
     destroyPlugin() {
         this._events = null;
         this._cfgs = {};
@@ -94,7 +95,7 @@ class Command {
         this.queue = [];
         this.destroyed = true;
     }
-
+    
     initCommands() {
         const cmdPlugin = this;
         cmdPlugin.registerCommand('add', {
@@ -155,6 +156,7 @@ class Command {
                     });
                 }
                 graph.emit('afterdelete', {items: selectedItems});
+                graph.set('selectedItems', [])
             },
             shortcutCodes: ['Delete'],
         });
@@ -170,7 +172,10 @@ class Command {
                 const cmd = manager.queue[manager.current];
                 cmd && cmd.execute(graph);
                 manager.current++;
-                graph.set('selectedItems', [])
+                let cmdNext = manager.queue[manager.current]
+                if (cmdNext && cmdNext.selectedItems && cmdNext.selectedItems.length > 0) {
+                    graph.set('selectedItems', manager.queue[manager.current].selectedItems)
+                }
             },
             shortcutCodes: [['metaKey', 'shiftKey', 'z'], ['ctrlKey', 'shiftKey', 'z']],
         });
@@ -184,13 +189,11 @@ class Command {
                 const manager = cmdPlugin.get('_command');
                 const cmd = manager.queue[manager.current - 1];
                 if (cmd) {
-                    let zoom = graph.getZoom();
                     cmd.executeTimes++;
                     cmd.back(graph);
-                    graph.zoomTo(zoom)
                 }
                 manager.current--;
-                graph.set('selectedItems', [])
+                //graph.set('selectedItems', [])
             },
             shortcutCodes: [['metaKey', 'z'], ['ctrlKey', 'z']],
         });
