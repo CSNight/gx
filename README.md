@@ -1,24 +1,26 @@
 # gx
 
-## Project setup
-```
-npm install
-```
+## 功能
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+| 功能       | 默认启用 | 快捷键            | 工具栏 | 右键菜单 | 备注   |
+| :--------- | :--- | :--------------- | :----- | :----- | :---- |
+| undo       | ✔   |                   | ✔     | ✔      | 撤销 | 
+| redo       | ✔   |                   | ✔     | ✔      | 重做 | 
+| copy       | ✔   |                   | ✔     | ✔      | 复制 | 
+| paste      | ✔   |                   | ✔     | ✔      | 粘贴 | 
+| delete     | ✔   |                   | ✖     | ✔      | 删除 | 
+| clear      | ✔   |                   | ✔     | ✔      | 清空画布 |
+| zoom       | ✔   |                   | ✔     | ✔      | 缩放 |
+| zoomIn     | ✔   |                   | ✔     | ✔      | 放大 |
+| zoomOut    | ✔   |                   | ✔     | ✔      | 缩小 |
+| fit        | ✔   |                   | ✔     | ✔      | 适应屏幕 |
+| actualSize | ✔   |                   | ✔     | ✔      | 实际大小 |
+| fill       | ✔   |                   | ✔     | ✔      | 填充颜色 |
+| lineColor  | ✔   |                   | ✔     | ✔      | 线条颜色 |
+| lineWidth  | ✔   |                   | ✔     | ✔      | 线条宽度 |
+| lineDash   | ✔   |                   | ✔     | ✔      | 线条样式 |
+| lineType   | ✔   |                   | ✔     | ✔      | 线条类型 |
+| toFront    | ✔   |                   | ✔     | ✔      | 置于顶层 |
+| toBack     | ✔   |                   | ✔     | ✔      | 置于底层 |
+| selectAll  | ✔   |                   | ✔     | ✔      | 全选 |
+| alignItem  | ✔   |                   | ✔     | ✔      | 对齐线 |
